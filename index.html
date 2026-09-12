@@ -1,0 +1,879 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PaperBit</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+JP:wght@400;500;600;700&display=swap">
+<style>
+:root{
+  --bg:#0B0E13; --panel:#12161D; --panel2:#181D26; --panel3:#1F2531; --line:#222935; --line2:#2C3442;
+  --text:#E4E8EF; --muted:#7E8899; --dim:#535D6E;
+  --accent:#2FB8C4; --accent-ink:#0B0E13; --accent-soft:rgba(47,184,196,.14);
+  --up:#24B47E; --up-soft:rgba(36,180,126,.16); --down:#EF4E5F; --down-soft:rgba(239,78,95,.16);
+  --warn:#E0A43A; --ma1:#D9A441; --ma2:#8B7CF6;
+  --shadow:0 12px 32px rgba(0,0,0,.45);
+  color-scheme:dark;
+}
+@media (prefers-color-scheme: light){
+  :root:not([data-theme="dark"]){
+    --bg:#EEF1F5; --panel:#FFFFFF; --panel2:#F5F7FA; --panel3:#EBEEF3; --line:#E0E5EC; --line2:#CFD6E0;
+    --text:#171C24; --muted:#67717F; --dim:#9AA3B0;
+    --accent:#1798A4; --accent-ink:#FFFFFF; --accent-soft:rgba(23,152,164,.12);
+    --up:#1B9C6A; --up-soft:rgba(27,156,106,.12); --down:#DE3B4D; --down-soft:rgba(222,59,77,.12);
+    --warn:#B8801C; --ma1:#B7841E; --ma2:#6A5AE0;
+    --shadow:0 12px 32px rgba(20,30,50,.14);
+    color-scheme:light;
+  }
+}
+:root[data-theme="light"]{
+  --bg:#EEF1F5; --panel:#FFFFFF; --panel2:#F5F7FA; --panel3:#EBEEF3; --line:#E0E5EC; --line2:#CFD6E0;
+  --text:#171C24; --muted:#67717F; --dim:#9AA3B0;
+  --accent:#1798A4; --accent-ink:#FFFFFF; --accent-soft:rgba(23,152,164,.12);
+  --up:#1B9C6A; --up-soft:rgba(27,156,106,.12); --down:#DE3B4D; --down-soft:rgba(222,59,77,.12);
+  --warn:#B8801C; --ma1:#B7841E; --ma2:#6A5AE0;
+  --shadow:0 12px 32px rgba(20,30,50,.14);
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--text);font-family:"IBM Plex Sans JP",system-ui,-apple-system,"Segoe UI","Hiragino Sans","Noto Sans JP",sans-serif;font-size:13px;line-height:1.45;-webkit-font-smoothing:antialiased}
+.num,.mono{font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-variant-numeric:tabular-nums}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;padding:0}
+button:disabled{cursor:not-allowed;opacity:.5}
+button:focus-visible,input:focus-visible,[tabindex]:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+input{font:inherit;color:inherit}
+input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
+input[type=number]{-moz-appearance:textfield}
+[hidden]{display:none!important}
+.up{color:var(--up)} .down{color:var(--down)} .muted{color:var(--muted)}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:6px;min-width:0;min-height:0;display:flex;flex-direction:column;overflow:hidden}
+.ph{display:flex;align-items:center;gap:10px;padding:0 12px;height:38px;border-bottom:1px solid var(--line);font-weight:600;font-size:12.5px;flex:none}
+.tabs{display:flex;gap:2px}
+.tabs button{padding:0 10px;height:38px;color:var(--muted);font-weight:500;border-bottom:2px solid transparent;margin-bottom:-1px}
+.tabs button.on{color:var(--text);border-bottom-color:var(--accent)}
+.tabs button:hover{color:var(--text)}
+.eyebrow{font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
+
+/* ---------- Header ---------- */
+.top{height:52px;display:flex;align-items:center;gap:22px;padding:0 16px;border-bottom:1px solid var(--line);background:var(--panel)}
+.brand{display:flex;align-items:center;gap:9px;font-weight:700;font-size:15px;letter-spacing:.01em}
+.logo{width:26px;height:26px;border-radius:6px;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;font-family:"IBM Plex Mono",monospace;font-weight:600;font-size:12px}
+.modes{display:flex;gap:4px;background:var(--panel2);border:1px solid var(--line);border-radius:6px;padding:3px}
+.modes button{padding:4px 12px;border-radius:4px;color:var(--muted);font-weight:500}
+.modes button.on{background:var(--panel3);color:var(--text)}
+.conn{display:flex;align-items:center;gap:6px;font-size:11.5px;color:var(--muted)}
+.conn i{width:8px;height:8px;border-radius:50%;background:var(--dim)}
+.conn.ok i{background:var(--up);box-shadow:0 0 0 3px var(--up-soft)}
+.conn.bad i{background:var(--down)}
+.hd-equity{margin-left:auto;display:flex;align-items:baseline;gap:8px;font-size:12px;color:var(--muted)}
+.hd-equity b{color:var(--text);font-size:15px;font-weight:500}
+.ghost{padding:6px 12px;border:1px solid var(--line2);border-radius:5px;color:var(--muted);font-weight:500}
+.ghost:hover{color:var(--text);border-color:var(--muted)}
+
+/* ---------- Grid ---------- */
+.grid{display:grid;grid-template-columns:236px minmax(0,1fr) 248px 300px;grid-template-rows:540px 300px;gap:6px;padding:6px}
+.markets{grid-row:1/3}
+.bottom{grid-column:2/5}
+
+/* ---------- Markets ---------- */
+.search{margin:8px 10px;display:flex;align-items:center;gap:8px;background:var(--panel2);border:1px solid var(--line);border-radius:5px;padding:0 10px;height:32px}
+.search input{flex:1;background:none;border:0;min-width:0}
+.search input::placeholder{color:var(--dim)}
+.mk-head,.mk-row{display:grid;grid-template-columns:1.2fr 1fr .8fr;gap:6px;padding:0 12px;align-items:center}
+.mk-head{height:26px;font-size:11px;color:var(--muted)}
+.mk-head span:not(:first-child),.mk-row .num{text-align:right}
+.mk-list{overflow:auto;flex:1}
+.mk-row{height:40px;width:100%;text-align:left;border-left:2px solid transparent}
+.mk-row:hover{background:var(--panel2)}
+.mk-row.on{background:var(--accent-soft);border-left-color:var(--accent)}
+.mk-row .sym{font-weight:600}
+.mk-row .sym small{color:var(--muted);font-weight:400}
+.mk-row .name{display:block;font-size:10.5px;color:var(--muted);font-weight:400}
+.mk-note{padding:10px 12px;border-top:1px solid var(--line);font-size:11px;color:var(--muted);line-height:1.5}
+
+/* ---------- Chart ---------- */
+.ticker{display:flex;align-items:center;gap:18px;padding:10px 14px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.ticker .pair{font-size:16px;font-weight:700;display:flex;align-items:baseline;gap:6px}
+.ticker .pair small{font-size:11px;font-weight:500;color:var(--muted);padding:2px 5px;border:1px solid var(--line2);border-radius:3px}
+.ticker .price{font-size:20px;font-weight:500}
+.stat{display:flex;flex-direction:column;gap:1px}
+.stat .eyebrow{font-size:10px}
+.stat .v{font-size:12px}
+.tfbar{display:flex;align-items:center;gap:2px;padding:4px 10px;border-bottom:1px solid var(--line)}
+.tfbar button{padding:3px 8px;border-radius:4px;color:var(--muted);font-size:12px;font-weight:500}
+.tfbar button.on{background:var(--panel3);color:var(--text)}
+.tfbar .legend{margin-left:auto;font-size:11px;color:var(--muted);display:flex;gap:10px}
+.legend i{font-style:normal}
+.chart-wrap{position:relative;flex:1;min-height:0}
+canvas{display:block;width:100%;height:100%}
+.chart-note{position:absolute;left:10px;bottom:26px;font-size:10.5px;color:var(--dim);pointer-events:none}
+.chart-msg{position:absolute;inset:0;display:grid;place-items:center;color:var(--muted);font-size:12px;pointer-events:none}
+
+/* ---------- Order book ---------- */
+.ob{flex:1;display:flex;flex-direction:column;min-height:0;font-size:11.5px}
+.ob-head{display:grid;grid-template-columns:1fr 1fr 1fr;padding:5px 10px;color:var(--muted);font-size:10.5px}
+.ob-head span:not(:first-child){text-align:right}
+.ob-side{flex:1;display:flex;flex-direction:column;justify-content:flex-start;overflow:hidden}
+.ob-side.asks{flex-direction:column-reverse}
+.ob-row{position:relative;display:grid;grid-template-columns:1fr 1fr 1fr;padding:2px 10px;height:20px;align-items:center}
+.ob-row span{position:relative;z-index:1}
+.ob-row span:not(:first-child){text-align:right;color:var(--text)}
+.ob-row .bar{position:absolute;right:0;top:0;bottom:0;z-index:0;opacity:.85}
+.asks .bar{background:var(--down-soft)} .bids .bar{background:var(--up-soft)}
+.ob-mid{display:flex;align-items:center;gap:8px;padding:6px 10px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);font-size:15px;font-weight:500}
+.ob-mid small{font-size:10.5px;color:var(--muted);margin-left:auto;font-weight:400}
+.trades{flex:1;overflow:auto;font-size:11.5px}
+.tr-row{display:grid;grid-template-columns:1fr 1fr 1fr;padding:2px 10px;height:20px;align-items:center}
+.tr-row span:not(:first-child){text-align:right}
+
+/* ---------- Order form ---------- */
+.of{padding:12px;display:flex;flex-direction:column;gap:10px;overflow:auto}
+.seg{display:grid;grid-template-columns:1fr 1fr;background:var(--panel2);border-radius:5px;padding:3px;gap:3px}
+.seg button{padding:6px;border-radius:4px;color:var(--muted);font-weight:600}
+.seg button.on{background:var(--panel3);color:var(--text)}
+.seg.side button.on.buy{background:var(--up);color:#fff}
+.seg.side button.on.sell{background:var(--down);color:#fff}
+.lev{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.lev-val{font-weight:600;padding:2px 8px;border-radius:4px;background:var(--accent-soft);color:var(--accent)}
+input[type=range]{width:100%;accent-color:var(--accent);margin:4px 0 0}
+.lev-marks{display:flex;justify-content:space-between;font-size:10px;color:var(--dim)}
+.lev-marks button{color:var(--muted)}
+.field{display:flex;align-items:center;background:var(--panel2);border:1px solid var(--line);border-radius:5px;height:36px;padding:0 10px;gap:8px}
+.field:focus-within{border-color:var(--accent)}
+.field label{color:var(--muted);font-size:11.5px;white-space:nowrap}
+.field input{flex:1;min-width:0;background:none;border:0;text-align:right;font-size:13px}
+.field .unit{color:var(--muted);font-size:11px}
+.field.disabled{opacity:.6}
+.pct{display:grid;grid-template-columns:repeat(4,1fr);gap:4px}
+.pct button{padding:4px;border:1px solid var(--line);border-radius:4px;color:var(--muted);font-size:11px}
+.pct button:hover{border-color:var(--accent);color:var(--text)}
+.calc{display:flex;flex-direction:column;gap:4px;font-size:11.5px;color:var(--muted)}
+.calc div{display:flex;justify-content:space-between}
+.calc b{color:var(--text);font-weight:500}
+.submit{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.submit.single{grid-template-columns:1fr}
+.submit button{padding:11px 8px;border-radius:5px;color:#fff;font-weight:700;font-size:13px;line-height:1.2}
+.submit button small{display:block;font-weight:500;font-size:10.5px;opacity:.85}
+.submit .b-long{background:var(--up)} .submit .b-short{background:var(--down)}
+.submit button:hover{filter:brightness(1.08)}
+.avail{display:flex;justify-content:space-between;font-size:11.5px;color:var(--muted);padding-top:8px;border-top:1px solid var(--line)}
+.avail b{color:var(--text);font-weight:500}
+.fee-note{font-size:10.5px;color:var(--dim);line-height:1.5}
+.unavail{padding:10px 12px;border-radius:5px;background:var(--down-soft);color:var(--down);font-size:12px}
+
+/* ---------- Bottom ---------- */
+.bt{flex:1;overflow:auto;min-height:0}
+table{width:100%;border-collapse:collapse;font-size:12px;white-space:nowrap}
+th{position:sticky;top:0;background:var(--panel);text-align:left;font-weight:500;font-size:11px;color:var(--muted);padding:7px 12px;border-bottom:1px solid var(--line)}
+td{padding:7px 12px;border-bottom:1px solid var(--line);vertical-align:middle}
+td.r,th.r{text-align:right}
+.pill{display:inline-block;padding:1px 7px;border-radius:3px;font-size:11px;font-weight:600}
+.pill.long{background:var(--up-soft);color:var(--up)} .pill.short{background:var(--down-soft);color:var(--down)}
+.pill.spot{background:var(--accent-soft);color:var(--accent)}
+.pill.liq{background:var(--down);color:#fff}
+.sm{padding:4px 10px;border-radius:4px;border:1px solid var(--line2);font-size:11px;font-weight:500;color:var(--text)}
+.sm:hover{border-color:var(--accent);color:var(--accent)}
+.empty{padding:28px;text-align:center;color:var(--muted)}
+.empty b{display:block;color:var(--text);font-weight:600;margin-bottom:4px}
+.assets{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:12px}
+.tile{background:var(--panel2);border-radius:6px;padding:10px 12px}
+.tile .v{font-size:18px;font-weight:500;margin-top:2px}
+.tile .s{font-size:11px;color:var(--muted);margin-top:2px}
+.bt-count{font-size:11px;color:var(--muted);margin-left:auto;font-weight:400}
+
+/* ---------- Misc ---------- */
+.toasts{position:fixed;right:16px;bottom:16px;display:flex;flex-direction:column;gap:8px;z-index:50}
+.toast{background:var(--panel3);border:1px solid var(--line2);border-left:3px solid var(--accent);border-radius:6px;padding:10px 14px;box-shadow:var(--shadow);font-size:12.5px;min-width:240px;animation:in .18s ease-out}
+.toast.up{border-left-color:var(--up)} .toast.down{border-left-color:var(--down)} .toast.warn{border-left-color:var(--warn)}
+.toast small{display:block;color:var(--muted);margin-top:2px}
+@keyframes in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.toast{animation:none}}
+.foot{padding:8px 16px 14px;font-size:11px;color:var(--dim);display:flex;gap:16px;flex-wrap:wrap}
+.ast-bar{display:flex;align-items:center;gap:10px;padding:0 12px 10px;font-size:11.5px;color:var(--muted)}
+.ast-bar .sm{margin-left:auto}
+
+/* ---------- Modal ---------- */
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.55);display:grid;place-items:center;z-index:40;padding:16px}
+.ap-head,.ap-row{display:grid;grid-template-columns:88px 84px 1fr 1fr 64px 28px;gap:6px;align-items:center}
+.ap-head span:last-child{text-align:left}
+.ap-row .field{height:32px;padding:0 8px}
+.ap-row .field input{font-size:12px}
+.sel{height:32px;background:var(--panel2);border:1px solid var(--line);border-radius:5px;color:var(--text);padding:0 6px;font:inherit;font-size:12px;min-width:0}
+.ap-row .x{color:var(--muted);font-size:14px;text-align:center}
+.ap-row .x:hover{color:var(--down)}
+.ap-sub{grid-column:1/-1;font-size:11px;color:var(--muted);display:flex;gap:14px;padding:0 2px 4px}
+.modal-box{width:min(640px,100%);max-height:90vh;background:var(--panel);border:1px solid var(--line2);border-radius:8px;box-shadow:var(--shadow);display:flex;flex-direction:column;overflow:hidden}
+.modal-hd{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--line);font-weight:600;font-size:14px}
+.modal-hd button{color:var(--muted);font-size:16px;padding:2px 6px}
+.modal-bd{padding:14px 16px;display:flex;flex-direction:column;gap:12px;overflow:auto}
+.modal-bd p{margin:0;font-size:11.5px;color:var(--muted);line-height:1.5}
+.am-row{display:grid;grid-template-columns:110px 1fr 120px;gap:10px;align-items:center;font-size:12px}
+.am-row .field{height:32px}
+.am-row .val{text-align:right;color:var(--muted)}
+.am-head{display:grid;grid-template-columns:110px 1fr 120px;gap:10px;font-size:10.5px;color:var(--muted);padding-bottom:4px;border-bottom:1px solid var(--line)}
+.am-head span:last-child{text-align:right}
+.modal-ft{display:flex;align-items:center;gap:8px;padding:12px 16px;border-top:1px solid var(--line);font-size:12px;color:var(--muted)}
+.modal-ft .spacer{flex:1}
+.primary{padding:7px 16px;border-radius:5px;background:var(--accent);color:var(--accent-ink);font-weight:600}
+.primary:hover{filter:brightness(1.08)}
+
+@media (max-width:1240px){
+  .grid{grid-template-columns:minmax(0,1fr) 248px 300px;grid-template-rows:520px 300px 300px}
+  .markets{grid-row:3;grid-column:1/2}
+  .bottom{grid-column:1/4;grid-row:2}
+}
+@media (max-width:900px){
+  .top{gap:12px;padding:0 10px}
+  .grid{grid-template-columns:1fr 1fr;grid-template-rows:auto}
+  .chart{grid-column:1/3;height:440px}
+  .book{height:420px} .order{height:auto}
+  .markets{grid-column:1/3;grid-row:auto;height:300px}
+  .bottom{grid-column:1/3;grid-row:auto;height:320px}
+  .assets{grid-template-columns:1fr 1fr}
+}
+@media (max-width:600px){
+  .grid{grid-template-columns:1fr}
+  .chart,.book,.order,.markets,.bottom{grid-column:1}
+  .hd-equity,.conn span{display:none}
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="brand"><span class="logo">PB</span>PaperBit</div>
+  <nav class="modes" aria-label="取引の種類">
+    <button data-mode="spot">現物</button>
+    <button data-mode="futures" class="on">USDT-M 先物</button>
+  </nav>
+  <div class="conn" id="conn"><i></i><span>Bitget に接続中…</span></div>
+  <div class="hd-equity">総資産 <b class="num" id="hdEquity">10,000.00</b> USDT <span class="num" id="hdUpnl"></span></div>
+  <button class="ghost" id="resetBtn">口座をリセット</button>
+</header>
+
+<main class="grid">
+  <aside class="panel markets">
+    <div class="search"><span class="muted">⌕</span><input id="mkSearch" placeholder="銘柄を検索" aria-label="銘柄を検索"></div>
+    <div class="mk-head"><span>銘柄</span><span>価格</span><span>24h</span></div>
+    <div class="mk-list" id="mkList"></div>
+    <div class="mk-note">価格・ローソク足・板・約定は <b>Bitget 公開API</b> のリアルタイムデータです。注文は本サイト内でのみ約定し、実際の資金は動きません。</div>
+  </aside>
+
+  <section class="panel chart">
+    <div class="ticker">
+      <div class="pair"><span id="tkSym">BTC/USDT</span><small id="tkKind">無期限</small></div>
+      <div class="price num" id="tkPrice">—</div>
+      <div class="stat"><span class="eyebrow">24h 変動</span><span class="v num" id="tkChg">—</span></div>
+      <div class="stat"><span class="eyebrow">24h 高値</span><span class="v num" id="tkHigh">—</span></div>
+      <div class="stat"><span class="eyebrow">24h 安値</span><span class="v num" id="tkLow">—</span></div>
+      <div class="stat"><span class="eyebrow">24h 出来高 (USDT)</span><span class="v num" id="tkVol">—</span></div>
+      <div class="stat" id="tkMarkBox"><span class="eyebrow">マーク価格</span><span class="v num" id="tkMark">—</span></div>
+      <div class="stat" id="tkFundBox"><span class="eyebrow">資金調達率</span><span class="v num" id="tkFund">—</span></div>
+    </div>
+    <div class="tfbar" id="tfbar">
+      <button data-tf="1m" class="on">1分</button><button data-tf="5m">5分</button><button data-tf="15m">15分</button><button data-tf="1H">1時間</button>
+      <div class="legend num" id="legend"></div>
+    </div>
+    <div class="chart-wrap"><canvas id="chart"></canvas><div class="chart-note">MA(7) <span style="color:var(--ma1)">━</span>　MA(25) <span style="color:var(--ma2)">━</span></div><div class="chart-msg" id="chartMsg">ローソク足を読み込み中…</div></div>
+  </section>
+
+  <section class="panel book">
+    <div class="ph tabs"><button class="on" data-bk="book">板</button><button data-bk="trades">約定履歴</button></div>
+    <div class="ob" id="obPane">
+      <div class="ob-head"><span>価格(USDT)</span><span id="obQtyHd">数量(BTC)</span><span>累計</span></div>
+      <div class="ob-side asks" id="asks"></div>
+      <div class="ob-mid"><span class="num" id="obMid">—</span><span id="obArrow"></span><small class="num" id="obSpread"></small></div>
+      <div class="ob-side bids" id="bids"></div>
+    </div>
+    <div class="trades" id="trPane" hidden>
+      <div class="ob-head"><span>価格(USDT)</span><span>数量</span><span>時刻</span></div>
+      <div id="trList"></div>
+    </div>
+  </section>
+
+  <section class="panel order">
+    <div class="ph"><span id="ofTitle">先物注文</span><span class="bt-count" id="ofLevHint"></span></div>
+    <div class="of">
+      <div class="unavail" id="unavail" hidden></div>
+      <div class="seg side" id="spotSide" hidden><button class="on buy" data-side="buy">買い</button><button class="sell" data-side="sell">売り</button></div>
+      <div class="seg"><button class="on" data-ot="limit">指値</button><button data-ot="market">成行</button></div>
+      <div id="levBox">
+        <div class="lev"><span class="eyebrow">レバレッジ</span><span class="lev-val num" id="levVal">10x</span></div>
+        <input type="range" id="lev" min="1" max="125" value="10" aria-label="レバレッジ">
+        <div class="lev-marks" id="levMarks"></div>
+      </div>
+      <div class="field" id="priceField"><label>価格</label><input type="number" id="price" class="num" step="any" inputmode="decimal"><span class="unit">USDT</span></div>
+      <div class="field"><label>数量</label><input type="number" id="qty" class="num" step="any" inputmode="decimal" placeholder="0"><span class="unit" id="qtyUnit">BTC</span></div>
+      <div class="pct"><button data-pct="25">25%</button><button data-pct="50">50%</button><button data-pct="75">75%</button><button data-pct="100">100%</button></div>
+      <div class="calc" id="calc"></div>
+      <div class="submit" id="submitBox">
+        <button class="b-long" id="btnLong">買い / ロング<small id="btnLongSub"></small></button>
+        <button class="b-short" id="btnShort">売り / ショート<small id="btnShortSub"></small></button>
+      </div>
+      <div class="avail"><span>利用可能</span><b class="num" id="avail">—</b></div>
+      <div class="avail" id="availCoinRow" hidden><span id="availCoinLbl">保有</span><b class="num" id="availCoin">—</b></div>
+      <div class="fee-note">手数料（Bitget 標準）: 現物 0.10% ／ 先物 メイカー 0.02%・テイカー 0.06%。先物は分離マージン、清算判定はマーク価格、維持証拠金率 0.4% で概算。</div>
+    </div>
+  </section>
+
+  <section class="panel bottom">
+    <div class="ph tabs" id="btTabs">
+      <button class="on" data-bt="pos">ポジション <span class="num" id="cPos">0</span></button>
+      <button data-bt="ord">未約定注文 <span class="num" id="cOrd">0</span></button>
+      <button data-bt="his">取引履歴</button>
+      <button data-bt="ast">資産</button>
+    </div>
+    <div class="bt" id="btBody"></div>
+  </section>
+</main>
+<div class="foot"><span>PaperBit は学習用のデモ環境です。価格は Bitget の公開データ、資金は仮想です。</span><span>口座データはこのブラウザ内（localStorage）にのみ保存されます。</span></div>
+<div class="modal" id="assetModal" hidden>
+  <div class="modal-box" role="dialog" aria-labelledby="amTitle">
+    <div class="modal-hd"><span id="amTitle">保有資産を編集</span><button id="amClose" aria-label="閉じる">✕</button></div>
+    <div class="modal-bd">
+      <p>実際に持っている残高を入力すると、その内容で練習を始められます。保存した時点の総資産が損益の基準になります。</p>
+      <div class="field"><label>USDT 残高</label><input type="number" id="amUsdt" class="num" step="any" inputmode="decimal"><span class="unit">USDT</span></div>
+      <div class="am-head"><span>現物保有</span><span>数量</span><span>評価額</span></div>
+      <div id="amList" style="display:flex;flex-direction:column;gap:6px"></div>
+      <div class="am-head ap-head"><span>先物ポジション</span><span>方向</span><span>数量</span><span>参入価格</span><span>レバ</span><span></span></div>
+      <div id="amPos" style="display:flex;flex-direction:column;gap:6px"></div>
+      <button class="sm" id="amAddPos" style="align-self:flex-start">＋ ポジションを追加</button>
+      <p>USDT 残高は証拠金を除いた「利用可能」額を入力してください。ポジションの証拠金は 数量 × 参入価格 ÷ レバレッジ で計算します。</p>
+    </div>
+    <div class="modal-ft"><span>保存後の総資産 <b class="num" id="amTotal">—</b> USDT</span><span class="spacer"></span><button class="ghost" id="amCancel">キャンセル</button><button class="primary" id="amSave">保存</button></div>
+  </div>
+</div>
+<div class="toasts" id="toasts"></div>
+
+<script>
+(() => {
+'use strict';
+const $ = s => document.querySelector(s);
+const $$ = s => Array.from(document.querySelectorAll(s));
+const fmt = (n, d = 2) => (isFinite(n) ? n : 0).toLocaleString('en-US', { minimumFractionDigits: d, maximumFractionDigits: d });
+const fmtS = (n, d = 2) => (n >= 0 ? '+' : '') + fmt(n, d);
+const pct = (n, d = 2) => (n >= 0 ? '+' : '') + fmt(n * 100, d) + '%';
+const cls = n => n > 0 ? 'up' : n < 0 ? 'down' : '';
+const tstr = t => new Date(+t).toLocaleTimeString('ja-JP', { hour12: false });
+const dstr = t => { const d = new Date(+t); return `${String(d.getMonth() + 1).padStart(2, '0')}/${String(d.getDate()).padStart(2, '0')} ${tstr(t)}`; };
+const uid = () => Math.random().toString(36).slice(2, 9);
+const compact = n => n >= 1e9 ? fmt(n / 1e9, 2) + 'B' : n >= 1e6 ? fmt(n / 1e6, 2) + 'M' : n >= 1e3 ? fmt(n / 1e3, 1) + 'K' : fmt(n, 0);
+
+const REST = 'https://api.bitget.com', WS_URL = 'wss://ws.bitget.com/v2/ws/public';
+const INIT_USDT = 10000, FEE = { spot: 0.001, maker: 0.0002, taker: 0.0006 }, MMR = 0.004;
+const SPOT = 'SPOT', FUT = 'USDT-FUTURES';
+const TFS = { '1m': { label: '1分', spot: '1min', fut: '1m', ws: 'candle1m', ms: 60e3 }, '5m': { label: '5分', spot: '5min', fut: '5m', ws: 'candle5m', ms: 300e3 }, '15m': { label: '15分', spot: '15min', fut: '15m', ws: 'candle15m', ms: 900e3 }, '1H': { label: '1時間', spot: '1h', fut: '1H', ws: 'candle1H', ms: 3600e3 } };
+const DEFS = [
+  { sym: 'BTC', name: 'Bitcoin' }, { sym: 'ETH', name: 'Ethereum' }, { sym: 'SOL', name: 'Solana' }, { sym: 'XRP', name: 'XRP' },
+  { sym: 'BNB', name: 'BNB' }, { sym: 'DOGE', name: 'Dogecoin' }, { sym: 'ADA', name: 'Cardano' }, { sym: 'AVAX', name: 'Avalanche' },
+  { sym: 'PUMP', name: 'Pump.fun' }, { sym: 'BSB', name: 'BSB' }, { sym: 'BEAT', name: 'BEAT' },
+];
+
+/* ---------- account state (persisted) ---------- */
+const KEY = 'paperbit.live.v1';
+let S = { usdt: INIT_USDT, hold: {}, positions: [], orders: [], history: [], mode: 'futures', sym: 'BTC', lev: 10 };
+try { const raw = localStorage.getItem(KEY); if (raw) S = Object.assign(S, JSON.parse(raw)); } catch (e) {}
+let saveTimer = null;
+function save() { clearTimeout(saveTimer); saveTimer = setTimeout(() => { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} }, 300); }
+
+/* ---------- market state (live) ---------- */
+// m.px[instType] = { last, open, high, low, vol, mark, fund, ts }   m.avail[instType] = bool
+const M = DEFS.map(d => ({ ...d, id: d.sym + 'USDT', px: {}, avail: {}, pd: { [SPOT]: 2, [FUT]: 2 }, qd: { [SPOT]: 4, [FUT]: 4 }, maxLev: 125 }));
+const bySym = Object.fromEntries(M.map(m => [m.sym, m]));
+const byId = Object.fromEntries(M.map(m => [m.id, m]));
+const live = { candles: [], candleKey: '', book: null, trades: [], loadingCandles: false };
+let tf = '1m', orderType = 'limit', spotSide = 'buy', bkTab = 'book', btTab = 'pos', hoverIdx = null, dirty = true, lastMid = 0;
+const inst = () => S.mode === 'futures' ? FUT : SPOT;
+const cur = () => bySym[S.sym];
+const price = (m, it) => (m.px[it || inst()] || {}).last || 0;
+const markPx = m => (m.px[FUT] && (m.px[FUT].mark || m.px[FUT].last)) || 0;
+
+/* ---------- REST ---------- */
+async function get(path) {
+  const r = await fetch(REST + path); const j = await r.json();
+  if (j.code !== '00000') throw new Error(j.msg || 'Bitget API error');
+  return j.data;
+}
+function applyTicker(it, t) {
+  const m = byId[t.symbol || t.instId]; if (!m) return;
+  m.avail[it] = true;
+  m.px[it] = { last: +t.lastPr, open: +(t.open24h || t.open || t.lastPr), high: +t.high24h, low: +t.low24h, vol: +(t.usdtVolume || t.quoteVolume || 0), mark: +(t.markPrice || 0), fund: t.fundingRate != null ? +t.fundingRate : null, ts: +t.ts };
+}
+async function bootstrap() {
+  const [spotT, futT, spotS, futC] = await Promise.all([
+    get('/api/v2/spot/market/tickers'), get('/api/v2/mix/market/tickers?productType=USDT-FUTURES'),
+    get('/api/v2/spot/public/symbols'), get('/api/v2/mix/market/contracts?productType=USDT-FUTURES'),
+  ]);
+  for (const t of spotT) if (byId[t.symbol]) applyTicker(SPOT, t);
+  for (const t of futT) if (byId[t.symbol]) applyTicker(FUT, t);
+  for (const s of spotS) { const m = byId[s.symbol]; if (m) { m.pd[SPOT] = +s.pricePrecision; m.qd[SPOT] = +s.quantityPrecision; } }
+  for (const c of futC) { const m = byId[c.symbol]; if (m) { m.pd[FUT] = +c.pricePlace; m.qd[FUT] = +c.volumePlace; m.maxLev = +c.maxLever || 125; } }
+}
+async function loadCandles() {
+  const m = cur(), it = inst(), key = `${m.id}|${it}|${tf}`;
+  if (!m.avail[it]) { live.candles = []; live.candleKey = key; $('#chartMsg').textContent = ''; return; }
+  live.loadingCandles = true; $('#chartMsg').textContent = 'ローソク足を読み込み中…';
+  try {
+    const raw = it === SPOT
+      ? await get(`/api/v2/spot/market/candles?symbol=${m.id}&granularity=${TFS[tf].spot}&limit=300`)
+      : await get(`/api/v2/mix/market/candles?symbol=${m.id}&productType=USDT-FUTURES&granularity=${TFS[tf].fut}&limit=300`);
+    const rows = raw.map(r => ({ t: +r[0], o: +r[1], h: +r[2], l: +r[3], c: +r[4], v: +r[5] })).sort((a, b) => a.t - b.t);
+    if (live.candleKey === key && live.candles.length) mergeCandles(live.candles, rows); // WS が先に届いていれば統合
+    else { live.candles = rows; live.candleKey = key; }
+    $('#chartMsg').textContent = '';
+  } catch (e) { $('#chartMsg').textContent = 'ローソク足を取得できませんでした: ' + e.message; }
+  live.loadingCandles = false; dirty = true;
+}
+function mergeCandles(arr, rows) {
+  const idx = new Map(arr.map((c, i) => [c.t, i]));
+  for (const r of rows) { const i = idx.get(r.t); if (i != null) arr[i] = r; else { arr.push(r); idx.set(r.t, arr.length - 1); } }
+  arr.sort((a, b) => a.t - b.t); if (arr.length > 600) arr.splice(0, arr.length - 600);
+}
+
+/* ---------- WebSocket ---------- */
+let ws = null, wsAlive = false, pingTimer = null, retry = 0, subscribed = [];
+function setConn(state, text) { const c = $('#conn'); c.className = 'conn ' + state; c.querySelector('span').textContent = text; }
+function symbolArgs() { // 選択中の銘柄の詳細チャンネル
+  const m = cur(), it = inst(); if (!m.avail[it]) return [];
+  return [{ instType: it, channel: TFS[tf].ws, instId: m.id }, { instType: it, channel: 'books15', instId: m.id }, { instType: it, channel: 'trade', instId: m.id }];
+}
+function tickerArgs() { const a = []; for (const m of M) for (const it of [SPOT, FUT]) if (m.avail[it]) a.push({ instType: it, channel: 'ticker', instId: m.id }); return a; }
+function send(op, args) { if (ws && ws.readyState === 1 && args.length) ws.send(JSON.stringify({ op, args })); }
+function connect() {
+  setConn('', retry ? `再接続中… (${retry})` : 'Bitget に接続中…');
+  ws = new WebSocket(WS_URL);
+  ws.onopen = () => { retry = 0; wsAlive = true; setConn('ok', 'Bitget ライブ'); subscribed = symbolArgs(); send('subscribe', tickerArgs().concat(subscribed)); clearInterval(pingTimer); pingTimer = setInterval(() => { if (ws.readyState === 1) ws.send('ping'); }, 25000); };
+  ws.onmessage = ev => { if (ev.data === 'pong') return; let j; try { j = JSON.parse(ev.data); } catch (e) { return; } if (j.event) { if (j.event === 'error') console.warn('Bitget WS:', j); return; } handle(j); };
+  ws.onclose = () => { wsAlive = false; clearInterval(pingTimer); setConn('bad', '切断 — 再接続します'); retry++; setTimeout(connect, Math.min(15000, 1000 * Math.pow(2, retry))); };
+  ws.onerror = () => { try { ws.close(); } catch (e) {} };
+}
+function resubscribe() { send('unsubscribe', subscribed); subscribed = symbolArgs(); send('subscribe', subscribed); }
+function handle(j) {
+  const { instType: it, channel, instId } = j.arg || {}; const m = byId[instId]; if (!m || !j.data) return;
+  const mine = m === cur() && it === inst();
+  if (channel === 'ticker') { for (const t of j.data) applyTicker(it, t); onPriceUpdate(); dirty = true; return; }
+  if (!mine) return;
+  if (channel === TFS[tf].ws) {
+    const key = `${m.id}|${it}|${tf}`; const rows = j.data.map(r => ({ t: +r[0], o: +r[1], h: +r[2], l: +r[3], c: +r[4], v: +r[5] }));
+    if (live.candleKey !== key) { live.candles = []; live.candleKey = key; }
+    mergeCandles(live.candles, rows); dirty = true;
+  } else if (channel === 'books15') {
+    const d = j.data[0]; live.book = { asks: d.asks.map(x => [+x[0], +x[1]]), bids: d.bids.map(x => [+x[0], +x[1]]) }; dirty = true;
+  } else if (channel === 'trade') {
+    const seen = new Set(live.trades.map(t => t.id));
+    const add = j.data.filter(t => !seen.has(t.tradeId)).map(t => ({ id: t.tradeId, p: +t.price, q: +t.size, s: t.side === 'buy' ? 1 : -1, t: +t.ts })).sort((a, b) => b.t - a.t);
+    live.trades = add.concat(live.trades).slice(0, 40); dirty = true;
+  }
+}
+function switchInstrument() { // 銘柄・モード・時間足の変更
+  live.book = null; live.trades = []; hoverIdx = null; lastMid = 0;
+  if (!cur().avail[inst()]) { const first = M.find(x => x.avail[inst()]); if (first) S.sym = first.sym; }
+  loadCandles(); resubscribe(); save(); render(true);
+}
+
+/* ---------- account helpers ---------- */
+function upnl(p) { return (markPx(bySym[p.sym]) - p.entry) * p.qty * (p.side === 'long' ? 1 : -1); }
+function liqPrice(p) { return p.side === 'long' ? p.entry * (1 - 1 / p.lev + MMR) : p.entry * (1 + 1 / p.lev - MMR); }
+function equity() {
+  let e = S.usdt;
+  for (const s in S.hold) if (bySym[s]) e += (S.hold[s] || 0) * price(bySym[s], SPOT);
+  for (const p of S.positions) e += p.margin + upnl(p);
+  for (const o of S.orders) e += (o.reservedUsdt || 0) + (o.reservedQty || 0) * price(bySym[o.sym], SPOT);
+  return e;
+}
+function log(h) { S.history.unshift({ id: uid(), t: Date.now(), ...h }); if (S.history.length > 300) S.history.length = 300; }
+
+function fillFutures(sym, side, qty, px, lev, feeRate, reserved) {
+  const m = bySym[sym]; const qd = m.qd[FUT], pd = m.pd[FUT];
+  let pos = S.positions.find(p => p.sym === sym);
+  if (reserved != null) S.usdt += reserved;            // 予約分をいったん戻してから計算
+  if (pos && pos.side !== side) {
+    const closeQty = Math.min(qty, pos.qty);
+    const pnl = (px - pos.entry) * closeQty * (pos.side === 'long' ? 1 : -1);
+    const mret = pos.margin * closeQty / pos.qty;
+    const cfee = closeQty * px * feeRate;
+    S.usdt += mret + pnl - cfee;
+    pos.qty -= closeQty; pos.margin -= mret;
+    log({ sym, mode: 'futures', side, type: '決済', price: px, qty: closeQty, fee: cfee, pnl });
+    toast(`${sym} ${pos.side === 'long' ? 'ロング' : 'ショート'}を ${fmt(closeQty, qd)} ${sym} 決済`, `実現損益 ${fmtS(pnl)} USDT`, pnl >= 0 ? 'up' : 'down');
+    if (pos.qty <= 1e-9) S.positions = S.positions.filter(p => p !== pos);
+    qty -= closeQty;
+    if (qty <= 1e-9) { save(); return true; }
+    pos = null;
+  }
+  const margin = qty * px / lev; const ofee = qty * px * feeRate;
+  if (S.usdt < margin + ofee) { toast('証拠金が不足しています', `必要 ${fmt(margin + ofee)} USDT / 利用可能 ${fmt(S.usdt)} USDT`, 'warn'); return false; }
+  S.usdt -= margin + ofee;
+  if (pos) { pos.entry = (pos.entry * pos.qty + px * qty) / (pos.qty + qty); pos.qty += qty; pos.margin += margin; pos.lev = lev; }
+  else S.positions.push({ id: uid(), sym, side, qty, entry: px, margin, lev, t: Date.now() });
+  log({ sym, mode: 'futures', side, type: '新規', price: px, qty, fee: ofee, pnl: 0 });
+  toast(`${sym} ${side === 'long' ? 'ロング' : 'ショート'} ${fmt(qty, qd)} ${sym} を建てました`, `参入 ${fmt(px, pd)} USDT・${lev}x`, side === 'long' ? 'up' : 'down');
+  save(); return true;
+}
+function fillSpot(sym, side, qty, px, reserved) {
+  const m = bySym[sym]; const cost = qty * px; const fee = cost * FEE.spot;
+  if (side === 'buy') {
+    if (reserved != null) S.usdt += reserved;
+    if (S.usdt < cost + fee) { toast('USDT が不足しています', `必要 ${fmt(cost + fee)} USDT`, 'warn'); return false; }
+    S.usdt -= cost + fee; S.hold[sym] = (S.hold[sym] || 0) + qty;
+  } else {
+    if (reserved == null) { if ((S.hold[sym] || 0) < qty) { toast(`${sym} の保有量が不足しています`, '', 'warn'); return false; } S.hold[sym] -= qty; }
+    S.usdt += cost - fee;
+  }
+  log({ sym, mode: 'spot', side, type: '現物', price: px, qty, fee, pnl: 0 });
+  toast(`${sym} を ${fmt(qty, m.qd[SPOT])} ${side === 'buy' ? '購入' : '売却'}`, `${fmt(px, m.pd[SPOT])} USDT・手数料 ${fmt(fee)} USDT`, side === 'buy' ? 'up' : 'down');
+  save(); return true;
+}
+function closePosition(id) {
+  const p = S.positions.find(x => x.id === id); if (!p) return;
+  const px = price(bySym[p.sym], FUT); if (!px) return toast('価格を受信できていません', '', 'warn');
+  fillFutures(p.sym, p.side === 'long' ? 'short' : 'long', p.qty, px, p.lev, FEE.taker, null);
+  render(true);
+}
+function cancelOrder(id) {
+  const o = S.orders.find(x => x.id === id); if (!o) return;
+  if (o.reservedUsdt) S.usdt += o.reservedUsdt;
+  if (o.reservedQty) S.hold[o.sym] = (S.hold[o.sym] || 0) + o.reservedQty;
+  S.orders = S.orders.filter(x => x !== o); toast('注文を取り消しました', '', 'warn'); save(); render(true);
+}
+function onPriceUpdate() { // ティッカー更新のたびに指値約定と清算を判定
+  let changed = false;
+  for (const o of S.orders.slice()) {
+    const m = bySym[o.sym]; const px = price(m, o.mode === 'futures' ? FUT : SPOT); if (!px) continue;
+    const isBuy = o.side === 'buy' || o.side === 'long';
+    if (!(isBuy ? px <= o.price : px >= o.price)) continue;
+    S.orders = S.orders.filter(x => x !== o); changed = true;
+    if (o.mode === 'futures') fillFutures(o.sym, o.side, o.qty, o.price, o.lev, FEE.maker, o.reservedUsdt);
+    else fillSpot(o.sym, o.side, o.qty, o.price, o.side === 'buy' ? o.reservedUsdt : o.reservedQty);
+  }
+  for (const p of S.positions.slice()) {
+    const mp = markPx(bySym[p.sym]); if (!mp) continue; const lq = liqPrice(p);
+    if (p.side === 'long' ? mp <= lq : mp >= lq) {
+      S.positions = S.positions.filter(x => x !== p); changed = true;
+      log({ sym: p.sym, mode: 'futures', side: p.side === 'long' ? 'short' : 'long', type: '清算', price: lq, qty: p.qty, fee: 0, pnl: -p.margin });
+      toast(`${p.sym} ${p.side === 'long' ? 'ロング' : 'ショート'}が清算されました`, `証拠金 ${fmt(p.margin)} USDT を失いました`, 'down');
+    }
+  }
+  if (changed) { save(); render(true); }
+}
+
+/* ---------- order form ---------- */
+function placeOrder(side) {
+  const m = cur(), it = inst(); const qty = parseFloat($('#qty').value); const lev = S.lev; const last = price(m);
+  if (!m.avail[it]) return toast('この銘柄はこのモードでは取引できません', '', 'warn');
+  if (!last) return toast('価格を受信できていません', '接続を確認してください', 'warn');
+  if (!(qty > 0)) return toast('数量を入力してください', '', 'warn');
+  let px = orderType === 'market' ? last : parseFloat($('#price').value);
+  if (!(px > 0)) return toast('価格を入力してください', '', 'warn');
+  const isBuy = side === 'buy' || side === 'long';
+  const marketable = orderType === 'market' || (isBuy ? px >= last : px <= last);
+  if (marketable) {
+    const fillPx = orderType === 'market' ? last : px;
+    if (S.mode === 'futures') fillFutures(m.sym, side, qty, fillPx, lev, FEE.taker, null); else fillSpot(m.sym, side, qty, fillPx, null);
+  } else {
+    const o = { id: uid(), t: Date.now(), sym: m.sym, mode: S.mode, side, qty, price: px, lev };
+    if (S.mode === 'futures') { o.reservedUsdt = qty * px / lev + qty * px * FEE.maker; if (S.usdt < o.reservedUsdt) return toast('証拠金が不足しています', `必要 ${fmt(o.reservedUsdt)} USDT`, 'warn'); S.usdt -= o.reservedUsdt; }
+    else if (side === 'buy') { o.reservedUsdt = qty * px * (1 + FEE.spot); if (S.usdt < o.reservedUsdt) return toast('USDT が不足しています', `必要 ${fmt(o.reservedUsdt)} USDT`, 'warn'); S.usdt -= o.reservedUsdt; }
+    else { if ((S.hold[m.sym] || 0) < qty) return toast(`${m.sym} の保有量が不足しています`, '', 'warn'); S.hold[m.sym] -= qty; o.reservedQty = qty; }
+    S.orders.push(o); toast('指値注文を出しました', `${m.sym} ${fmt(px, m.pd[it])} USDT × ${fmt(qty, m.qd[it])}`, '');
+    save();
+  }
+  $('#qty').value = ''; render(true);
+}
+function maxQty(side) {
+  const m = cur(); const px = orderType === 'market' ? price(m) : (parseFloat($('#price').value) || price(m)); if (!px) return 0;
+  if (S.mode === 'futures') return S.usdt / (px * (1 / S.lev + FEE.taker));
+  return side === 'buy' ? S.usdt / (px * (1 + FEE.spot)) : (S.hold[m.sym] || 0);
+}
+function updateCalc() {
+  const m = cur(), it = inst(); const qty = parseFloat($('#qty').value) || 0; const px = orderType === 'market' ? price(m) : (parseFloat($('#price').value) || 0);
+  const notional = qty * px; const c = $('#calc'); const pd = m.pd[it];
+  if (S.mode === 'futures') {
+    const fee = notional * (orderType === 'market' ? FEE.taker : FEE.maker); const margin = notional / S.lev;
+    const lqL = px * (1 - 1 / S.lev + MMR), lqS = px * (1 + 1 / S.lev - MMR);
+    c.innerHTML = `<div><span>注文金額</span><b class="num">${fmt(notional)} USDT</b></div><div><span>必要証拠金</span><b class="num">${fmt(margin)} USDT</b></div><div><span>手数料</span><b class="num">${fmt(fee, 4)} USDT</b></div><div><span>清算価格（概算）</span><b class="num"><span class="up">${fmt(lqL, pd)}</span> / <span class="down">${fmt(lqS, pd)}</span></b></div>`;
+    $('#btnLongSub').textContent = notional ? `${fmt(margin)} USDT 証拠金` : ''; $('#btnShortSub').textContent = notional ? `${fmt(margin)} USDT 証拠金` : '';
+    $('#avail').textContent = fmt(S.usdt) + ' USDT';
+  } else {
+    const fee = notional * FEE.spot;
+    c.innerHTML = `<div><span>${spotSide === 'buy' ? '支払い' : '受取り'}金額</span><b class="num">${fmt(notional)} USDT</b></div><div><span>手数料 (0.10%)</span><b class="num">${fmt(fee, 4)} USDT</b></div>`;
+    $('#btnLong').innerHTML = spotSide === 'buy' ? `${m.sym} を買う<small>${notional ? fmt(notional + fee) + ' USDT' : ''}</small>` : `${m.sym} を売る<small>${notional ? fmt(notional - fee) + ' USDT 受取' : ''}</small>`;
+    $('#btnLong').className = spotSide === 'buy' ? 'b-long' : 'b-short';
+    $('#avail').textContent = fmt(S.usdt) + ' USDT';
+    $('#availCoin').textContent = `${fmt(S.hold[m.sym] || 0, m.qd[SPOT])} ${m.sym}`; $('#availCoinLbl').textContent = `保有 ${m.sym}`;
+  }
+}
+function syncForm() {
+  const m = cur(), it = inst(); const fut = S.mode === 'futures'; const ok = !!m.avail[it];
+  $('#ofTitle').textContent = fut ? '先物注文' : '現物注文';
+  $('#ofLevHint').textContent = fut ? '分離マージン' : '';
+  $('#levBox').hidden = !fut; $('#spotSide').hidden = fut;
+  $('#submitBox').classList.toggle('single', !fut); $('#btnShort').hidden = !fut; $('#availCoinRow').hidden = fut;
+  if (fut) { $('#btnLong').className = 'b-long'; $('#btnLong').innerHTML = '買い / ロング<small id="btnLongSub"></small>'; }
+  $('#unavail').hidden = ok; if (!ok) $('#unavail').textContent = `${m.sym}/USDT は Bitget の${fut ? '先物' : '現物'}に上場していません。${fut ? '現物' : '先物'}に切り替えてください。`;
+  $('#btnLong').disabled = !ok; $('#btnShort').disabled = !ok;
+  $('#qtyUnit').textContent = m.sym; $('#obQtyHd').textContent = `数量(${m.sym})`;
+  $('#priceField').classList.toggle('disabled', orderType === 'market');
+  $('#price').disabled = orderType === 'market';
+  if (orderType === 'market') $('#price').value = ''; else if (!$('#price').value && price(m)) $('#price').value = price(m).toFixed(m.pd[it]);
+  $('#price').placeholder = orderType === 'market' ? '成行' : '';
+  // レバレッジ上限は契約ごと
+  const maxLev = m.maxLev || 125; $('#lev').max = maxLev; if (S.lev > maxLev) S.lev = maxLev;
+  const marks = [1, 5, 10, 25, 50, 75, 100, 125].filter(x => x <= maxLev); if (!marks.includes(maxLev)) marks.push(maxLev);
+  $('#levMarks').innerHTML = marks.map(x => `<button data-lev="${x}">${x}x</button>`).join('');
+  $('#levVal').textContent = S.lev + 'x'; $('#lev').value = S.lev;
+  $('#tkKind').textContent = fut ? '無期限' : '現物';
+  $('#tkMarkBox').hidden = !fut; $('#tkFundBox').hidden = !fut;
+  updateCalc();
+}
+
+/* ---------- rendering ---------- */
+function renderMarkets() {
+  const q = $('#mkSearch').value.trim().toUpperCase(); const list = $('#mkList'); const it = inst();
+  const rows = M.filter(m => !q || m.sym.includes(q) || m.name.toUpperCase().includes(q));
+  if (list.childElementCount !== rows.length || list.dataset.q !== q) {
+    list.dataset.q = q;
+    list.innerHTML = rows.map(m => `<button class="mk-row" data-sym="${m.sym}"><span class="sym">${m.sym}<small>/USDT</small><span class="name">${m.name}</span></span><span class="num" data-p></span><span class="num" data-c></span></button>`).join('');
+  }
+  for (const el of list.children) {
+    const m = bySym[el.dataset.sym]; const px = m.px[it];
+    el.classList.toggle('on', m.sym === S.sym);
+    const pe = el.querySelector('[data-p]'), ce = el.querySelector('[data-c]');
+    if (!m.avail[it]) { pe.textContent = '—'; ce.textContent = it === FUT ? '現物のみ' : '先物のみ'; ce.className = 'num muted'; el.style.opacity = .55; continue; }
+    el.style.opacity = '';
+    if (!px) { pe.textContent = '…'; ce.textContent = ''; continue; }
+    const ch = px.open ? px.last / px.open - 1 : 0;
+    pe.textContent = fmt(px.last, m.pd[it]); ce.textContent = pct(ch); ce.className = 'num ' + cls(ch);
+  }
+}
+function renderTicker() {
+  const m = cur(), it = inst(); const px = m.px[it]; const pd = m.pd[it];
+  $('#tkSym').textContent = `${m.sym}/USDT`;
+  if (!px) { $('#tkPrice').textContent = '—'; ['#tkChg', '#tkHigh', '#tkLow', '#tkVol', '#tkMark', '#tkFund'].forEach(s => $(s).textContent = '—'); document.title = `${m.sym}/USDT · PaperBit`; return; }
+  const ch = px.open ? px.last / px.open - 1 : 0;
+  const pe = $('#tkPrice'); pe.textContent = fmt(px.last, pd); pe.className = 'price num ' + cls(ch);
+  const ce = $('#tkChg'); ce.textContent = `${fmtS(px.last - px.open, pd)}  ${pct(ch)}`; ce.className = 'v num ' + cls(ch);
+  $('#tkHigh').textContent = fmt(px.high, pd); $('#tkLow').textContent = fmt(px.low, pd);
+  $('#tkVol').textContent = compact(px.vol);
+  if (it === FUT) { $('#tkMark').textContent = fmt(px.mark, pd); $('#tkFund').textContent = px.fund != null ? pct(px.fund, 4) : '—'; }
+  document.title = `${fmt(px.last, pd)} ${m.sym}/USDT · PaperBit`;
+}
+function renderBook() {
+  const m = cur(), it = inst(); const pd = m.pd[it], qd = m.qd[it]; const last = price(m);
+  const b = live.book;
+  if (!b) { $('#asks').innerHTML = ''; $('#bids').innerHTML = `<div class="empty" style="padding:14px">${m.avail[it] ? '板を受信中…' : '板はありません'}</div>`; $('#obMid').textContent = last ? fmt(last, pd) : '—'; $('#obArrow').textContent = ''; $('#obSpread').textContent = ''; return; }
+  const n = 12; const asks = b.asks.slice(0, n), bids = b.bids.slice(0, n);
+  const cum = arr => { let c = 0; return arr.map(([p, q]) => { c += q; return { p, q, cum: c }; }); };
+  const A = cum(asks), B = cum(bids); const maxCum = Math.max(A.length ? A[A.length - 1].cum : 0, B.length ? B[B.length - 1].cum : 0) || 1;
+  const row = (r, k) => `<div class="ob-row"><span class="${k}">${fmt(r.p, pd)}</span><span>${fmt(r.q, qd)}</span><span>${fmt(r.cum, qd)}</span><i class="bar" style="width:${(r.cum / maxCum * 100).toFixed(1)}%"></i></div>`;
+  $('#asks').innerHTML = A.map(r => row(r, 'down')).join('');
+  $('#bids').innerHTML = B.map(r => row(r, 'up')).join('');
+  const mid = $('#obMid'); mid.textContent = fmt(last, pd); mid.className = 'num ' + (last >= lastMid ? 'up' : 'down');
+  $('#obArrow').textContent = last >= lastMid ? '↑' : '↓'; $('#obArrow').className = last >= lastMid ? 'up' : 'down';
+  if (asks.length && bids.length) $('#obSpread').textContent = `スプレッド ${fmt(asks[0][0] - bids[0][0], pd)}`;
+  lastMid = last;
+}
+function renderTrades() {
+  const m = cur(), it = inst();
+  $('#trList').innerHTML = live.trades.length ? live.trades.map(t => `<div class="tr-row num"><span class="${t.s > 0 ? 'up' : 'down'}">${fmt(t.p, m.pd[it])}</span><span>${fmt(t.q, m.qd[it])}</span><span class="muted">${tstr(t.t)}</span></div>`).join('') : `<div class="empty" style="padding:14px">約定を受信中…</div>`;
+}
+function renderHeader() {
+  const e = equity(); const u = S.positions.reduce((a, p) => a + upnl(p), 0);
+  $('#hdEquity').textContent = fmt(e);
+  const el = $('#hdUpnl'); el.textContent = S.positions.length ? `(${fmtS(u)})` : ''; el.className = 'num ' + cls(u);
+}
+const SIDE_JA = { buy: '買い', sell: '売り', long: 'ロング', short: 'ショート' };
+function renderBottom() {
+  $('#cPos').textContent = S.positions.length; $('#cOrd').textContent = S.orders.length;
+  const b = $('#btBody');
+  if (btTab === 'pos') {
+    if (!S.positions.length) { b.innerHTML = `<div class="empty"><b>ポジションはありません</b>右の注文パネルから先物のロング／ショートを建ててみましょう。</div>`; return; }
+    b.innerHTML = `<table><thead><tr><th>銘柄</th><th>方向</th><th class="r">数量</th><th class="r">参入価格</th><th class="r">マーク価格</th><th class="r">清算価格</th><th class="r">証拠金</th><th class="r">未実現損益 (ROE)</th><th class="r">操作</th></tr></thead><tbody>${S.positions.map(p => { const m = bySym[p.sym]; const pd = m.pd[FUT], qd = m.qd[FUT]; const u = upnl(p); const roe = u / p.margin; return `<tr><td><b>${p.sym}USDT</b> <span class="muted">無期限</span></td><td><span class="pill ${p.side}">${SIDE_JA[p.side]} ${p.lev}x</span></td><td class="r num">${fmt(p.qty, qd)} ${p.sym}</td><td class="r num">${fmt(p.entry, pd)}</td><td class="r num">${fmt(markPx(m), pd)}</td><td class="r num down">${fmt(liqPrice(p), pd)}</td><td class="r num">${fmt(p.margin)} USDT</td><td class="r num ${cls(u)}">${fmtS(u)} USDT <span class="muted">(${pct(roe)})</span></td><td class="r"><button class="sm" data-close="${p.id}">成行で決済</button></td></tr>`; }).join('')}</tbody></table>`;
+  } else if (btTab === 'ord') {
+    if (!S.orders.length) { b.innerHTML = `<div class="empty"><b>未約定の注文はありません</b>現在価格から離れた価格で指値を出すと、ここに並びます。</div>`; return; }
+    b.innerHTML = `<table><thead><tr><th>時刻</th><th>銘柄</th><th>種別</th><th>方向</th><th class="r">指値価格</th><th class="r">数量</th><th class="r">現在価格</th><th class="r">操作</th></tr></thead><tbody>${S.orders.map(o => { const m = bySym[o.sym]; const it = o.mode === 'futures' ? FUT : SPOT; const buy = o.side === 'buy' || o.side === 'long'; return `<tr><td class="num muted">${dstr(o.t)}</td><td><b>${o.sym}USDT</b></td><td><span class="pill ${o.mode === 'spot' ? 'spot' : buy ? 'long' : 'short'}">${o.mode === 'spot' ? '現物' : '先物 ' + o.lev + 'x'}</span></td><td class="${buy ? 'up' : 'down'}">${SIDE_JA[o.side]}</td><td class="r num">${fmt(o.price, m.pd[it])}</td><td class="r num">${fmt(o.qty, m.qd[it])} ${o.sym}</td><td class="r num">${fmt(price(m, it), m.pd[it])}</td><td class="r"><button class="sm" data-cancel="${o.id}">取消</button></td></tr>`; }).join('')}</tbody></table>`;
+  } else if (btTab === 'his') {
+    if (!S.history.length) { b.innerHTML = `<div class="empty"><b>取引履歴はまだありません</b>約定・決済・清算がここに記録されます。</div>`; return; }
+    b.innerHTML = `<table><thead><tr><th>時刻</th><th>銘柄</th><th>種別</th><th>方向</th><th class="r">価格</th><th class="r">数量</th><th class="r">手数料</th><th class="r">実現損益</th></tr></thead><tbody>${S.history.map(h => { const m = bySym[h.sym]; const it = h.mode === 'futures' ? FUT : SPOT; const buy = h.side === 'buy' || h.side === 'long'; return `<tr><td class="num muted">${dstr(h.t)}</td><td><b>${h.sym}USDT</b></td><td><span class="pill ${h.type === '清算' ? 'liq' : h.mode === 'spot' ? 'spot' : buy ? 'long' : 'short'}">${h.type}</span></td><td class="${buy ? 'up' : 'down'}">${SIDE_JA[h.side]}</td><td class="r num">${fmt(h.price, m ? m.pd[it] : 2)}</td><td class="r num">${fmt(h.qty, m ? m.qd[it] : 4)} ${h.sym}</td><td class="r num muted">${fmt(h.fee, 4)}</td><td class="r num ${cls(h.pnl)}">${h.pnl ? fmtS(h.pnl) : '—'}</td></tr>`; }).join('')}</tbody></table>`;
+  } else {
+    const e = equity(); const u = S.positions.reduce((a, p) => a + upnl(p), 0);
+    const closed = S.history.filter(h => h.type === '決済' || h.type === '清算'); const realized = S.history.reduce((a, h) => a + h.pnl - h.fee, 0);
+    const wins = closed.filter(h => h.pnl > 0).length; const wr = closed.length ? wins / closed.length : null;
+    const holds = Object.entries(S.hold).filter(([s, q]) => q > 1e-12 && bySym[s]);
+    const base = S.baseline || INIT_USDT;
+    b.innerHTML = `<div class="assets">
+      <div class="tile"><div class="eyebrow">総資産</div><div class="v num">${fmt(e)} <small class="muted">USDT</small></div><div class="s num ${cls(e - base)}">${fmtS(e - base)} (${pct(e / base - 1)}) 基準比</div></div>
+      <div class="tile"><div class="eyebrow">利用可能 USDT</div><div class="v num">${fmt(S.usdt)}</div><div class="s">注文予約分 ${fmt(S.orders.reduce((a, o) => a + (o.reservedUsdt || 0), 0))} USDT</div></div>
+      <div class="tile"><div class="eyebrow">未実現損益</div><div class="v num ${cls(u)}">${fmtS(u)}</div><div class="s">${S.positions.length} ポジション・証拠金 ${fmt(S.positions.reduce((a, p) => a + p.margin, 0))} USDT</div></div>
+      <div class="tile"><div class="eyebrow">実現損益（手数料込み）</div><div class="v num ${cls(realized)}">${fmtS(realized)}</div><div class="s">決済 ${closed.length} 回・勝率 ${wr == null ? '—' : fmt(wr * 100, 0) + '%'}</div></div>
+    </div>
+    <div class="ast-bar"><span>損益の基準: ${fmt(base)} USDT${S.baselineAt ? `（${dstr(S.baselineAt)} に設定）` : '（初期資金）'}</span><button class="sm" id="amOpen">保有資産を編集</button></div>
+    ${holds.length ? `<table><thead><tr><th>現物保有</th><th class="r">数量</th><th class="r">現在価格</th><th class="r">評価額</th></tr></thead><tbody>${holds.map(([s, q]) => { const m = bySym[s]; return `<tr><td><b>${s}</b> <span class="muted">${m.name}</span></td><td class="r num">${fmt(q, m.qd[SPOT])}</td><td class="r num">${fmt(price(m, SPOT), m.pd[SPOT])}</td><td class="r num">${fmt(q * price(m, SPOT))} USDT</td></tr>`; }).join('')}</tbody></table>` : `<div class="empty" style="padding-top:4px">現物の保有はありません。「保有資産を編集」から実際の残高を入力できます。</div>`}`;
+  }
+}
+
+/* ---------- asset editor ---------- */
+function openAssetModal() {
+  $('#amUsdt').value = S.usdt;
+  $('#amList').innerHTML = M.map(m => `<div class="am-row"><span><b>${m.sym}</b> <span class="muted">${m.name}</span></span><div class="field"><input type="number" class="num" step="any" inputmode="decimal" data-am="${m.sym}" value="${S.hold[m.sym] || ''}" placeholder="0"><span class="unit">${m.sym}</span></div><span class="val num" data-amv="${m.sym}"></span></div>`).join('');
+  $('#amPos').innerHTML = S.positions.map(posRow).join('');
+  updateAssetTotal(); $('#assetModal').hidden = false; $('#amUsdt').focus();
+}
+function posRow(p) {
+  const syms = M.filter(m => m.avail[FUT]);
+  const sym = p && p.sym || (syms[0] ? syms[0].sym : 'BTC');
+  return `<div class="ap-row">
+    <select class="sel" data-ap="sym">${syms.map(m => `<option value="${m.sym}"${m.sym === sym ? ' selected' : ''}>${m.sym}</option>`).join('')}</select>
+    <select class="sel" data-ap="side"><option value="long"${p && p.side === 'short' ? '' : ' selected'}>ロング</option><option value="short"${p && p.side === 'short' ? ' selected' : ''}>ショート</option></select>
+    <div class="field"><input type="number" class="num" step="any" inputmode="decimal" data-ap="qty" placeholder="数量" value="${p ? p.qty : ''}"></div>
+    <div class="field"><input type="number" class="num" step="any" inputmode="decimal" data-ap="entry" placeholder="参入価格" value="${p ? p.entry : ''}"></div>
+    <div class="field"><input type="number" class="num" step="1" min="1" inputmode="numeric" data-ap="lev" placeholder="x" value="${p ? p.lev : 10}"></div>
+    <button class="x" data-ap="del" aria-label="削除">✕</button>
+    <div class="ap-sub"><span data-ap="info"></span></div>
+  </div>`;
+}
+function readPosRows() { // フォームからポジション配列を作る。エラーは文字列で返す
+  const out = [];
+  for (const row of $$('.ap-row')) {
+    const g = k => row.querySelector(`[data-ap="${k}"]`);
+    const sym = g('sym').value, side = g('side').value, qty = parseFloat(g('qty').value), entry = parseFloat(g('entry').value); let lev = parseInt(g('lev').value, 10);
+    const m = bySym[sym]; if (!m) continue;
+    const blank = !g('qty').value && !g('entry').value; if (blank) { g('info').textContent = ''; continue; }
+    if (!(qty > 0) || !(entry > 0) || !(lev >= 1)) return { error: `${sym} のポジション: 数量・参入価格・レバレッジを確認してください` };
+    if (lev > m.maxLev) lev = m.maxLev;
+    if (out.find(p => p.sym === sym)) return { error: `${sym} のポジションが重複しています（1銘柄につき1つ）` };
+    const p = { id: uid(), sym, side, qty, entry, lev, margin: qty * entry / lev, t: Date.now() };
+    const u = upnl(p); g('info').innerHTML = `証拠金 ${fmt(p.margin)} USDT<span class="${cls(u)}">未実現損益 ${fmtS(u)} USDT</span><span class="down">清算価格 ${fmt(liqPrice(p), m.pd[FUT])}</span>`;
+    out.push(p);
+  }
+  return { positions: out };
+}
+function updateAssetTotal() {
+  let total = parseFloat($('#amUsdt').value) || 0;
+  for (const inp of $$('[data-am]')) { const m = bySym[inp.dataset.am]; const q = parseFloat(inp.value) || 0; const v = q * price(m, SPOT); total += v; $(`[data-amv="${m.sym}"]`).textContent = q ? fmt(v) + ' USDT' : '—'; }
+  const r = readPosRows(); if (r.positions) for (const p of r.positions) total += p.margin + upnl(p);
+  $('#amTotal').textContent = fmt(total);
+}
+function saveAssets() {
+  const usdt = parseFloat($('#amUsdt').value);
+  if (!(usdt >= 0)) return toast('USDT 残高は 0 以上の数値で入力してください', '', 'warn');
+  const r = readPosRows(); if (r.error) return toast(r.error, '', 'warn');
+  S.usdt = usdt;
+  for (const inp of $$('[data-am]')) { const q = parseFloat(inp.value) || 0; if (q < 0) return toast(`${inp.dataset.am} の数量は 0 以上で入力してください`, '', 'warn'); if (q > 0) S.hold[inp.dataset.am] = q; else delete S.hold[inp.dataset.am]; }
+  S.positions = r.positions;
+  S.baseline = equity(); S.baselineAt = Date.now();
+  $('#assetModal').hidden = true; save(); toast('保有資産を更新しました', `総資産 ${fmt(S.baseline)} USDT を損益の基準にします`, ''); render(true);
+}
+$('#btBody').addEventListener('click', e => { if (e.target.closest('#amOpen')) openAssetModal(); });
+$('#amClose').addEventListener('click', () => { $('#assetModal').hidden = true; });
+$('#amCancel').addEventListener('click', () => { $('#assetModal').hidden = true; });
+$('#assetModal').addEventListener('click', e => { if (e.target === e.currentTarget) $('#assetModal').hidden = true; });
+$('#assetModal').addEventListener('input', updateAssetTotal);
+$('#assetModal').addEventListener('change', updateAssetTotal);
+$('#amAddPos').addEventListener('click', () => { $('#amPos').insertAdjacentHTML('beforeend', posRow(null)); const rows = $$('.ap-row'); rows[rows.length - 1].querySelector('[data-ap="qty"]').focus(); });
+$('#amPos').addEventListener('click', e => { const b = e.target.closest('[data-ap="del"]'); if (b) { b.closest('.ap-row').remove(); updateAssetTotal(); } });
+$('#amSave').addEventListener('click', saveAssets);
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && !$('#assetModal').hidden) $('#assetModal').hidden = true; });
+
+/* ---------- chart ---------- */
+const cv = $('#chart'), ctx = cv.getContext('2d');
+function css(v) { return getComputedStyle(document.documentElement).getPropertyValue(v).trim(); }
+function drawChart() {
+  const m = cur(), it = inst(); const pd = m.pd[it]; const wrap = cv.parentElement; const dpr = window.devicePixelRatio || 1;
+  const W = wrap.clientWidth, H = wrap.clientHeight; if (!W || !H) return;
+  if (cv.width !== W * dpr || cv.height !== H * dpr) { cv.width = W * dpr; cv.height = H * dpr; }
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H);
+  const data = live.candles; if (!data.length) { $('#legend').innerHTML = ''; return; }
+  const axW = 76, axH = 22, stepX = 9, cw = 6;
+  const n = Math.min(data.length, Math.floor((W - axW - 10) / stepX)); const start = data.length - n; const vis = data.slice(start);
+  const ma = (k) => { const out = new Array(data.length).fill(null); let s = 0; for (let i = 0; i < data.length; i++) { s += data[i].c; if (i >= k) s -= data[i - k].c; if (i >= k - 1) out[i] = s / k; } return out; };
+  const ma7 = ma(7), ma25 = ma(25);
+  let lo = Infinity, hi = -Infinity;
+  vis.forEach((c, i) => { lo = Math.min(lo, c.l); hi = Math.max(hi, c.h); const a = ma7[start + i], b = ma25[start + i]; if (a) { lo = Math.min(lo, a); hi = Math.max(hi, a); } if (b) { lo = Math.min(lo, b); hi = Math.max(hi, b); } });
+  const pos = it === FUT ? S.positions.find(p => p.sym === m.sym) : null;
+  if (pos) { lo = Math.min(lo, pos.entry); hi = Math.max(hi, pos.entry); }
+  const pad = (hi - lo) * 0.08 || (price(m) || 1) * 0.001; lo -= pad; hi += pad;
+  const pTop = 8, pBot = H - axH - Math.round(H * 0.18) - 6, vTop = pBot + 6, vBot = H - axH;
+  const y = p => pTop + (hi - p) / (hi - lo) * (pBot - pTop);
+  const x = i => 4 + i * stepX + cw / 2;
+  const C = { text: css('--muted'), line: css('--line'), up: css('--up'), down: css('--down'), ma1: css('--ma1'), ma2: css('--ma2'), accent: css('--accent'), ink: css('--accent-ink') || '#000' };
+  ctx.font = '10.5px "IBM Plex Mono", monospace'; ctx.textBaseline = 'middle';
+  const ticks = 6; ctx.strokeStyle = C.line; ctx.lineWidth = 1; ctx.fillStyle = C.text; ctx.textAlign = 'left';
+  for (let i = 0; i <= ticks; i++) { const p = lo + (hi - lo) * i / ticks; const yy = Math.round(y(p)) + .5; ctx.beginPath(); ctx.moveTo(0, yy); ctx.lineTo(W - axW, yy); ctx.stroke(); ctx.fillText(fmt(p, pd), W - axW + 6, yy); }
+  ctx.textAlign = 'center'; const every = 12;
+  for (let i = vis.length - 1; i >= 0; i -= every) { const xx = Math.round(x(i)) + .5; ctx.strokeStyle = C.line; ctx.beginPath(); ctx.moveTo(xx, pTop); ctx.lineTo(xx, vBot); ctx.stroke(); ctx.fillStyle = C.text; const d = new Date(vis[i].t); ctx.fillText(tf === '1H' ? `${d.getMonth() + 1}/${d.getDate()} ${String(d.getHours()).padStart(2, '0')}:00` : d.toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit', hour12: false }), xx, H - axH / 2); }
+  const vmax = Math.max(...vis.map(c => c.v)) || 1;
+  vis.forEach((c, i) => { const h = (c.v / vmax) * (vBot - vTop); ctx.fillStyle = c.c >= c.o ? C.up : C.down; ctx.globalAlpha = .45; ctx.fillRect(x(i) - cw / 2, vBot - h, cw, h); ctx.globalAlpha = 1; });
+  vis.forEach((c, i) => { const col = c.c >= c.o ? C.up : C.down; ctx.strokeStyle = col; ctx.fillStyle = col; const xx = Math.round(x(i)) + .5; ctx.beginPath(); ctx.moveTo(xx, y(c.h)); ctx.lineTo(xx, y(c.l)); ctx.stroke(); const top = y(Math.max(c.o, c.c)), bh = Math.max(1, Math.abs(y(c.o) - y(c.c))); ctx.fillRect(xx - cw / 2, top, cw, bh); });
+  const line = (arr, col) => { ctx.strokeStyle = col; ctx.lineWidth = 1.2; ctx.beginPath(); let started = false; vis.forEach((_, i) => { const v = arr[start + i]; if (v == null) return; if (!started) { ctx.moveTo(x(i), y(v)); started = true; } else ctx.lineTo(x(i), y(v)); }); ctx.stroke(); ctx.lineWidth = 1; };
+  line(ma7, C.ma1); line(ma25, C.ma2);
+  const hline = (p, col, label, dash) => { const yy = Math.round(y(p)) + .5; ctx.setLineDash(dash); ctx.strokeStyle = col; ctx.beginPath(); ctx.moveTo(0, yy); ctx.lineTo(W - axW, yy); ctx.stroke(); ctx.setLineDash([]); ctx.fillStyle = col; ctx.fillRect(W - axW + 2, yy - 8, axW - 4, 16); ctx.fillStyle = C.ink; ctx.textAlign = 'left'; ctx.fillText(label, W - axW + 6, yy); };
+  if (pos) { hline(pos.entry, C.accent, fmt(pos.entry, pd), [2, 3]); const lq = liqPrice(pos); if (lq > lo && lq < hi) hline(lq, C.down, fmt(lq, pd), [1, 3]); }
+  const last = price(m) || vis[vis.length - 1].c;
+  if (last > lo && last < hi) hline(last, last >= vis[vis.length - 1].o ? C.up : C.down, fmt(last, pd), [4, 3]);
+  let leg = vis[vis.length - 1];
+  if (hoverIdx != null && hoverIdx >= 0 && hoverIdx < vis.length) {
+    leg = vis[hoverIdx]; const xx = Math.round(x(hoverIdx)) + .5;
+    ctx.setLineDash([3, 3]); ctx.strokeStyle = C.text; ctx.beginPath(); ctx.moveTo(xx, pTop); ctx.lineTo(xx, vBot); ctx.stroke(); ctx.setLineDash([]);
+  }
+  $('#legend').innerHTML = `<i>${dstr(leg.t)}</i><i>O <span class="${cls(leg.c - leg.o)}">${fmt(leg.o, pd)}</span></i><i>H ${fmt(leg.h, pd)}</i><i>L ${fmt(leg.l, pd)}</i><i>C <span class="${cls(leg.c - leg.o)}">${fmt(leg.c, pd)}</span></i><i>Vol ${fmt(leg.v, 0)}</i>`;
+}
+cv.addEventListener('mousemove', e => { const r = cv.getBoundingClientRect(); hoverIdx = Math.floor((e.clientX - r.left - 4) / 9); dirty = true; });
+cv.addEventListener('mouseleave', () => { hoverIdx = null; dirty = true; });
+
+function render(full) {
+  renderTicker(); renderHeader(); drawChart(); renderMarkets();
+  if (bkTab === 'book') renderBook(); else renderTrades();
+  if (btTab !== 'his' || full) renderBottom();
+  if (full) syncForm(); else if (!$('#qty').value || orderType === 'market') updateCalc();
+  dirty = false;
+}
+
+/* ---------- toasts ---------- */
+function toast(title, sub, kind) {
+  const el = document.createElement('div'); el.className = 'toast ' + (kind || ''); el.innerHTML = `${title}${sub ? `<small>${sub}</small>` : ''}`;
+  $('#toasts').appendChild(el); setTimeout(() => el.remove(), 4200);
+}
+
+/* ---------- events ---------- */
+$$('.modes button').forEach(b => b.addEventListener('click', () => { S.mode = b.dataset.mode; $$('.modes button').forEach(x => x.classList.toggle('on', x === b)); $('#price').value = ''; switchInstrument(); }));
+$('#mkList').addEventListener('click', e => { const r = e.target.closest('.mk-row'); if (!r) return; S.sym = r.dataset.sym; $('#price').value = ''; $('#qty').value = ''; switchInstrument(); });
+$('#mkSearch').addEventListener('input', renderMarkets);
+$('#tfbar').addEventListener('click', e => { const b = e.target.closest('[data-tf]'); if (!b) return; tf = b.dataset.tf; $$('#tfbar [data-tf]').forEach(x => x.classList.toggle('on', x === b)); live.candles = []; live.candleKey = ''; loadCandles(); resubscribe(); });
+$$('.book .tabs button').forEach(b => b.addEventListener('click', () => { bkTab = b.dataset.bk; $$('.book .tabs button').forEach(x => x.classList.toggle('on', x === b)); $('#obPane').hidden = bkTab !== 'book'; $('#trPane').hidden = bkTab !== 'trades'; render(true); }));
+$$('[data-ot]').forEach(b => b.addEventListener('click', () => { orderType = b.dataset.ot; $$('[data-ot]').forEach(x => x.classList.toggle('on', x === b)); if (orderType === 'limit') $('#price').value = ''; syncForm(); }));
+$$('#spotSide button').forEach(b => b.addEventListener('click', () => { spotSide = b.dataset.side; $$('#spotSide button').forEach(x => x.classList.toggle('on', x === b)); syncForm(); }));
+$('#lev').addEventListener('input', e => { S.lev = +e.target.value; $('#levVal').textContent = S.lev + 'x'; updateCalc(); save(); });
+$('#levMarks').addEventListener('click', e => { const b = e.target.closest('[data-lev]'); if (!b) return; S.lev = +b.dataset.lev; $('#lev').value = S.lev; $('#levVal').textContent = S.lev + 'x'; updateCalc(); save(); });
+$$('[data-pct]').forEach(b => b.addEventListener('click', () => { const m = cur(); const qd = m.qd[inst()]; const q = maxQty(spotSide) * (+b.dataset.pct / 100); $('#qty').value = (Math.floor(q * Math.pow(10, qd)) / Math.pow(10, qd)).toFixed(qd); updateCalc(); }));
+$('#qty').addEventListener('input', updateCalc); $('#price').addEventListener('input', updateCalc);
+$('#btnLong').addEventListener('click', () => placeOrder(S.mode === 'futures' ? 'long' : spotSide));
+$('#btnShort').addEventListener('click', () => placeOrder('short'));
+$('#btTabs').addEventListener('click', e => { const b = e.target.closest('[data-bt]'); if (!b) return; btTab = b.dataset.bt; $$('#btTabs button').forEach(x => x.classList.toggle('on', x === b)); renderBottom(); });
+$('#btBody').addEventListener('click', e => { const c = e.target.closest('[data-close]'); if (c) return closePosition(c.dataset.close); const x = e.target.closest('[data-cancel]'); if (x) cancelOrder(x.dataset.cancel); });
+let resetArmed = null;
+$('#resetBtn').addEventListener('click', () => {
+  const b = $('#resetBtn');
+  if (!resetArmed) { b.textContent = 'もう一度押すと初期化（10,000 USDT）'; b.style.color = 'var(--down)'; resetArmed = setTimeout(() => { resetArmed = null; b.textContent = '口座をリセット'; b.style.color = ''; }, 4000); return; }
+  clearTimeout(resetArmed); resetArmed = null; b.textContent = '口座をリセット'; b.style.color = '';
+  S = { usdt: INIT_USDT, hold: {}, positions: [], orders: [], history: [], mode: S.mode, sym: S.sym, lev: 10 }; save(); toast('口座をリセットしました', `${fmt(INIT_USDT, 0)} USDT から再スタート`, ''); render(true);
+});
+window.addEventListener('resize', () => { dirty = true; });
+new ResizeObserver(() => { dirty = true; }).observe(cv.parentElement);
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => { dirty = true; });
+
+/* ---------- boot ---------- */
+$$('.modes button').forEach(x => x.classList.toggle('on', x.dataset.mode === S.mode));
+render(true);
+(async () => {
+  try { await bootstrap(); } catch (e) { setConn('bad', 'Bitget API に接続できません'); toast('Bitget API に接続できませんでした', e.message, 'down'); }
+  if (!cur().avail[inst()]) { const first = M.find(x => x.avail[inst()]); if (first) S.sym = first.sym; }
+  render(true); loadCandles(); connect();
+})();
+setInterval(() => { if (dirty) render(false); }, 250);       // 描画は最大 4fps に間引き
+setInterval(() => { if (btTab !== 'his') renderBottom(); renderHeader(); }, 1000);
+})();
+</script>
+</body>
+</html>
