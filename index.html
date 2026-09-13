@@ -275,7 +275,6 @@ td.r,th.r{text-align:right}
     <div class="search"><span class="muted">⌕</span><input id="mkSearch" placeholder="銘柄を検索" aria-label="銘柄を検索"></div>
     <div class="mk-head"><span>銘柄</span><span>価格</span><span>24h</span></div>
     <div class="mk-list" id="mkList"></div>
-    <div class="mk-note">価格・ローソク足・板・約定は <b>Bitget 公開API</b> のリアルタイムデータです。注文は本サイト内でのみ約定し、実際の資金は動きません。</div>
   </aside>
 
   <section class="panel chart">
@@ -345,14 +344,12 @@ td.r,th.r{text-align:right}
     <div class="bt" id="btBody"></div>
   </section>
 </main>
-<div class="foot"><span>PaperBit は学習用のデモ環境です。価格は Bitget の公開データ、資金は仮想です。</span><span>口座データはこのブラウザ内（localStorage）にのみ保存されます。</span></div>
 <div class="modal" id="txModal" hidden>
   <div class="modal-box" role="dialog" aria-labelledby="txTitle">
     <div class="modal-hd"><span id="txTitle">USDT の入出金</span><button id="txClose" aria-label="閉じる">✕</button></div>
     <div class="modal-bd">
       <div class="seg"><button class="on" data-tx="withdraw">送金（出金）</button><button data-tx="deposit">入金アドレス</button></div>
       <div id="txWithdraw" style="display:flex;flex-direction:column;gap:10px">
-        <p>疑似チェーンへの送金です。残高からは差し引かれますが、実際のブロックチェーンには何も送られません。ステータスは「処理中」のまま止まります。</p>
         <div class="field"><label>通貨</label><span style="flex:1;text-align:right;font-weight:600">USDT</span><span class="unit">Tether</span></div>
         <div class="field"><label>ネットワーク</label><select id="txNet" class="sel"></select></div>
         <div class="field"><label>宛先アドレス</label><input id="txAddr" class="num" spellcheck="false" autocomplete="off" placeholder=""></div>
@@ -360,7 +357,6 @@ td.r,th.r{text-align:right}
         <div class="calc" id="txCalc"></div>
       </div>
       <div id="txDeposit" style="display:flex;flex-direction:column;gap:10px" hidden>
-        <p>この口座の USDT 入金アドレスです。疑似チェーン上のアドレスなので、<b>実際の資金は絶対に送らないでください</b>。デモの残高は「保有資産を編集」から変更できます。</p>
         <div class="field"><label>ネットワーク</label><select id="dpNet" class="sel"></select></div>
         <div class="addr-box"><span class="eyebrow">USDT 入金アドレス</span><div class="addr num" id="dpAddr"></div><button class="sm" id="dpCopy">アドレスをコピー</button></div>
       </div>
@@ -780,7 +776,7 @@ const short = (s, a = 8, b = 6) => s.length > a + b + 3 ? `${s.slice(0, a)}…${
 function renderTransfers() {
   const tx = S.transfers || [];
   if (!tx.length) return '';
-  return `<table><thead><tr><th>入出金</th><th>ネットワーク</th><th>宛先</th><th class="r">数量</th><th class="r">手数料</th><th>TXID</th><th>ステータス</th><th class="r">操作</th></tr></thead><tbody>${tx.map(t => `<tr><td><span class="num muted">${dstr(t.t)}</span> <b>USDT 出金</b></td><td>${netById[t.net] ? netById[t.net].name : t.net}</td><td class="num txid" data-copy="${t.address}" title="${t.address}">${short(t.address)}</td><td class="r num">${fmt(t.amount)} USDT</td><td class="r num muted">${fmt(t.fee)}</td><td class="num txid" data-copy="${t.txid}" title="${t.txid}">${short(t.txid, 10, 6)}</td><td>${t.status === 'cancelled' ? '<span class="st cancel"><i></i>取消済み</span>' : '<span class="st"><i></i>処理中 <span class="num">0/20 確認</span></span>'}</td><td class="r">${t.status === 'pending' ? `<button class="sm" data-txcancel="${t.id}">取消</button>` : ''}</td></tr>`).join('')}</tbody></table><div class="tx-note">疑似チェーンのため、送金は永久に「処理中」のままです。取消すると数量と手数料が残高に戻ります。TXID・宛先はクリックでコピーできます。</div>`;
+  return `<table><thead><tr><th>入出金</th><th>ネットワーク</th><th>宛先</th><th class="r">数量</th><th class="r">手数料</th><th>TXID</th><th>ステータス</th><th class="r">操作</th></tr></thead><tbody>${tx.map(t => `<tr><td><span class="num muted">${dstr(t.t)}</span> <b>USDT 出金</b></td><td>${netById[t.net] ? netById[t.net].name : t.net}</td><td class="num txid" data-copy="${t.address}" title="${t.address}">${short(t.address)}</td><td class="r num">${fmt(t.amount)} USDT</td><td class="r num muted">${fmt(t.fee)}</td><td class="num txid" data-copy="${t.txid}" title="${t.txid}">${short(t.txid, 10, 6)}</td><td>${t.status === 'cancelled' ? '<span class="st cancel"><i></i>取消済み</span>' : '<span class="st"><i></i>処理中 <span class="num">0/20 確認</span></span>'}</td><td class="r">${t.status === 'pending' ? `<button class="sm" data-txcancel="${t.id}">取消</button>` : ''}</td></tr>`).join('')}</tbody></table>`;
 }
 let txTab = 'withdraw', txArmed = null;
 function openTxModal(tab) {
