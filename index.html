@@ -101,7 +101,7 @@ input[type=number]{-moz-appearance:textfield}
 .stat .eyebrow{font-size:10px}
 .stat .v{font-size:12px}
 .tfbar{display:flex;align-items:center;gap:2px;padding:4px 10px;border-bottom:1px solid var(--line)}
-.tfbar button{padding:3px 8px;border-radius:4px;color:var(--muted);font-size:12px;font-weight:500}
+.tfbar button{padding:3px 8px;border-radius:4px;color:var(--muted);font-size:12px;font-weight:500;white-space:nowrap}
 .tfbar button.on{background:var(--panel3);color:var(--text)}
 .tfbar .legend{margin-left:auto;font-size:11px;color:var(--muted);display:flex;gap:10px}
 .legend i{font-style:normal}
@@ -195,9 +195,11 @@ td.r,th.r{text-align:right}
 
 /* ---------- Modal ---------- */
 .modal{position:fixed;inset:0;background:rgba(0,0,0,.55);display:grid;place-items:center;z-index:40;padding:16px}
-.ap-head,.ap-row{display:grid;grid-template-columns:88px 84px 1fr 1fr 64px 28px;gap:6px;align-items:center}
-.ap-head span:last-child{text-align:left}
+.am-head.ap-head,.ap-row{display:grid;grid-template-columns:88px 84px 1fr 1fr 64px 28px;gap:6px;align-items:center}
+.am-head.ap-head span:last-child{text-align:left}
+.ap-row>*{min-width:0}
 .ap-row .field{height:32px;padding:0 8px}
+.ap-row .field input,.ap-row .sel{width:100%}
 .ap-row .field input{font-size:12px}
 .sel{height:32px;background:var(--panel2);border:1px solid var(--line);border-radius:5px;color:var(--text);padding:0 6px;font:inherit;font-size:12px;min-width:0}
 .ap-row .x{color:var(--muted);font-size:14px;text-align:center}
@@ -249,7 +251,6 @@ td.r,th.r{text-align:right}
   </nav>
   <div class="conn" id="conn"><i></i><span>Bitget に接続中…</span></div>
   <div class="hd-equity">総資産 <b class="num" id="hdEquity">10,000.00</b> USDT <span class="num" id="hdUpnl"></span></div>
-  <button class="ghost" id="resetBtn">口座をリセット</button>
 </header>
 
 <main class="grid">
@@ -341,7 +342,7 @@ td.r,th.r{text-align:right}
       <button class="sm" id="amAddPos" style="align-self:flex-start">＋ ポジションを追加</button>
       <p>USDT 残高は証拠金を除いた「利用可能」額を入力してください。ポジションの証拠金は 数量 × 参入価格 ÷ レバレッジ で計算します。</p>
     </div>
-    <div class="modal-ft"><span>保存後の総資産 <b class="num" id="amTotal">—</b> USDT</span><span class="spacer"></span><button class="ghost" id="amCancel">キャンセル</button><button class="primary" id="amSave">保存</button></div>
+    <div class="modal-ft"><button class="ghost" id="resetBtn">口座をリセット</button><span class="spacer"></span><span>保存後の総資産 <b class="num" id="amTotal">—</b> USDT</span><button class="ghost" id="amCancel">キャンセル</button><button class="primary" id="amSave">保存</button></div>
   </div>
 </div>
 <div class="toasts" id="toasts"></div>
@@ -715,7 +716,7 @@ function renderBottom() {
 
 /* ---------- asset editor ---------- */
 function openAssetModal() {
-  $('#amUsdt').value = S.usdt;
+  $('#amUsdt').value = Math.round(S.usdt * 100) / 100;
   $('#amList').innerHTML = M.map(m => `<div class="am-row"><span><b>${m.sym}</b> <span class="muted">${m.name}</span></span><div class="field"><input type="number" class="num" step="any" inputmode="decimal" data-am="${m.sym}" value="${S.hold[m.sym] || ''}" placeholder="0"><span class="unit">${m.sym}</span></div><span class="val num" data-amv="${m.sym}"></span></div>`).join('');
   $('#amPos').innerHTML = S.positions.map(posRow).join('');
   updateAssetTotal(); $('#assetModal').hidden = false; $('#amUsdt').focus();
@@ -857,7 +858,7 @@ $('#resetBtn').addEventListener('click', () => {
   const b = $('#resetBtn');
   if (!resetArmed) { b.textContent = 'もう一度押すと初期化（10,000 USDT）'; b.style.color = 'var(--down)'; resetArmed = setTimeout(() => { resetArmed = null; b.textContent = '口座をリセット'; b.style.color = ''; }, 4000); return; }
   clearTimeout(resetArmed); resetArmed = null; b.textContent = '口座をリセット'; b.style.color = '';
-  S = { usdt: INIT_USDT, hold: {}, positions: [], orders: [], history: [], mode: S.mode, sym: S.sym, lev: 10 }; save(); toast('口座をリセットしました', `${fmt(INIT_USDT, 0)} USDT から再スタート`, ''); render(true);
+  S = { usdt: INIT_USDT, hold: {}, positions: [], orders: [], history: [], mode: S.mode, sym: S.sym, lev: 10 }; save(); $('#assetModal').hidden = true; toast('口座をリセットしました', `${fmt(INIT_USDT, 0)} USDT から再スタート`, ''); render(true);
 });
 window.addEventListener('resize', () => { dirty = true; });
 new ResizeObserver(() => { dirty = true; }).observe(cv.parentElement);
