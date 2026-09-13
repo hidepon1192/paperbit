@@ -366,7 +366,7 @@ td.r,th.r{text-align:right}
 </div>
 <div class="modal" id="assetModal" hidden>
   <div class="modal-box" role="dialog" aria-labelledby="amTitle">
-    <div class="modal-hd"><span id="amTitle">保有資産を編集</span><button id="amClose" aria-label="閉じる">✕</button></div>
+    <div class="modal-hd"><span id="amTitle">保有資産</span><button id="amClose" aria-label="閉じる">✕</button></div>
     <div class="modal-bd">
       <p>実際に持っている残高を入力すると、その内容で練習を始められます。保存した時点の総資産が損益の基準になります。</p>
       <div class="field"><label>USDT 残高</label><input type="number" id="amUsdt" class="num" step="any" inputmode="decimal"><span class="unit">USDT</span></div>
@@ -744,8 +744,8 @@ function renderBottom() {
       <div class="tile"><div class="eyebrow">未実現損益</div><div class="v num ${cls(u)}">${fmtS(u)}</div><div class="s">${S.positions.length} ポジション・証拠金 ${fmt(S.positions.reduce((a, p) => a + p.margin, 0))} USDT</div></div>
       <div class="tile"><div class="eyebrow">実現損益（手数料込み）</div><div class="v num ${cls(realized)}">${fmtS(realized)}</div><div class="s">決済 ${closed.length} 回・勝率 ${wr == null ? '—' : fmt(wr * 100, 0) + '%'}</div></div>
     </div>
-    <div class="ast-bar"><span>損益の基準: ${fmt(base)} USDT${S.baselineAt ? `（${dstr(S.baselineAt)} に設定）` : '（初期資金）'}</span><span class="actions"><button class="sm" id="txOpenW">USDT を送金</button><button class="sm" id="txOpenD">入金アドレス</button><button class="sm" id="amOpen">保有資産を編集</button></span></div>
-    ${holds.length ? `<table><thead><tr><th>現物保有</th><th class="r">数量</th><th class="r">現在価格</th><th class="r">評価額</th></tr></thead><tbody>${holds.map(([s, q]) => { const m = bySym[s]; return `<tr><td><b>${s}</b> <span class="muted">${m.name}</span></td><td class="r num">${fmt(q, m.qd[SPOT])}</td><td class="r num">${fmt(price(m, SPOT), m.pd[SPOT])}</td><td class="r num">${fmt(q * price(m, SPOT))} USDT</td></tr>`; }).join('')}</tbody></table>` : `<div class="empty" style="padding-top:4px">現物の保有はありません。「保有資産を編集」から実際の残高を入力できます。</div>`}
+    <div class="ast-bar"><span>損益の基準: ${fmt(base)} USDT${S.baselineAt ? `（${dstr(S.baselineAt)} に設定）` : '（初期資金）'}</span><span class="actions"><button class="sm" id="txOpenW">USDT を送金</button><button class="sm" id="txOpenD">入金アドレス</button><button class="sm" id="amOpen">保有資産</button></span></div>
+    ${holds.length ? `<table><thead><tr><th>現物保有</th><th class="r">数量</th><th class="r">現在価格</th><th class="r">評価額</th></tr></thead><tbody>${holds.map(([s, q]) => { const m = bySym[s]; return `<tr><td><b>${s}</b> <span class="muted">${m.name}</span></td><td class="r num">${fmt(q, m.qd[SPOT])}</td><td class="r num">${fmt(price(m, SPOT), m.pd[SPOT])}</td><td class="r num">${fmt(q * price(m, SPOT))} USDT</td></tr>`; }).join('')}</tbody></table>` : `<div class="empty" style="padding-top:4px">現物の保有はありません。「保有資産」から実際の残高を入力できます。</div>`}
     ${renderTransfers()}`;
   }
 }
