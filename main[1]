@@ -132,13 +132,13 @@
   <meta name="route-pattern" content="/:user_id/:repository/upload(/:name)(/*path)(.:format)" data-turbo-transient>
   <meta name="route-controller" content="repository_uploads" data-turbo-transient>
   <meta name="route-action" content="index" data-turbo-transient>
-  <meta name="fetch-nonce" content="v2:725999ea-102c-a6d3-3f34-cb1d4decfcb8">
+  <meta name="fetch-nonce" content="v2:f4223a4d-a75d-3e79-324a-2b8ebf6bc797">
 
     
   <meta name="current-catalog-service-hash" content="78339b992060a6a11548e4f18438b88c3ea1eec1b6705962d1fd145365fa2db1">
 
 
-  <meta name="request-id" content="D099:3D5844:8FBD1F:DD4570:6AA5EB11" data-pjax-transient="true"/><meta name="html-safe-nonce" content="03ff20975e88fb39509411393d4cb4078f5c8e95b07820a534ccf3a2812b365e" data-pjax-transient="true"/><meta name="visitor-payload" content="eyJyZWZlcnJlciI6IiIsInJlcXVlc3RfaWQiOiJEMDk5OjNENTg0NDo4RkJEMUY6REQ0NTcwOjZBQTVFQjExIiwidmlzaXRvcl9pZCI6IjQ3MTg0NTU4OTY0MjMxMzE5MjIiLCJyZWdpb25fZWRnZSI6ImphcGFuZWFzdCIsInJlZ2lvbl9yZW5kZXIiOiJqYXBhbmVhc3QifQ==" data-pjax-transient="true"/><meta name="visitor-hmac" content="515f1ec5fa21b0b0d0763ee4d4e59c53844fe9ccfe3880b7d528e492d580187d" data-pjax-transient="true"/>
+  <meta name="request-id" content="C450:0BE5:5D1736:8EB449:6AA5F480" data-pjax-transient="true"/><meta name="html-safe-nonce" content="9bd70f74de4dfe9eeec8fa2df69c25b13189839c17d3b941f672a35930b463ce" data-pjax-transient="true"/><meta name="visitor-payload" content="eyJyZWZlcnJlciI6IiIsInJlcXVlc3RfaWQiOiJDNDUwOjBCRTU6NUQxNzM2OjhFQjQ0OTo2QUE1RjQ4MCIsInZpc2l0b3JfaWQiOiI0NzE4NDU1ODk2NDIzMTMxOTIyIiwicmVnaW9uX2VkZ2UiOiJqYXBhbmVhc3QiLCJyZWdpb25fcmVuZGVyIjoiamFwYW5lYXN0In0=" data-pjax-transient="true"/><meta name="visitor-hmac" content="451807c3a2e7e0a3485759d4aa654b9bf9fad63009234bd1af5ad3d0d639d1fb" data-pjax-transient="true"/>
 
 
     <meta name="hovercard-subject-tag" content="repository:1367811351" data-turbo-transient>
@@ -181,8 +181,8 @@
     <meta property="fb:app_id" content="1401488693436528">
     <meta name="apple-itunes-app" content="app-id=1477376905, app-argument=https://github.com/hidepon1192/paperbit/upload/main" />
 
-      <meta name="twitter:image" content="https://opengraph.githubassets.com/bba5b931701b7b9851daca2d713abfede4b76d48f1c0f3509202a9d214d783d6/hidepon1192/paperbit" /><meta name="twitter:site" content="@github" /><meta name="twitter:card" content="summary_large_image" /><meta name="twitter:title" content="Upload files · hidepon1192/paperbit" /><meta name="twitter:description" content="Contribute to hidepon1192/paperbit development by creating an account on GitHub." />
-  <meta property="og:image" content="https://opengraph.githubassets.com/bba5b931701b7b9851daca2d713abfede4b76d48f1c0f3509202a9d214d783d6/hidepon1192/paperbit" /><meta property="og:image:alt" content="Contribute to hidepon1192/paperbit development by creating an account on GitHub." /><meta property="og:image:width" content="1200" /><meta property="og:image:height" content="600" /><meta property="og:site_name" content="GitHub" /><meta property="og:type" content="object" /><meta property="og:title" content="Upload files · hidepon1192/paperbit" /><meta property="og:url" content="https://github.com/hidepon1192/paperbit" /><meta property="og:description" content="Contribute to hidepon1192/paperbit development by creating an account on GitHub." />
+      <meta name="twitter:image" content="https://opengraph.githubassets.com/3e05c7dcadf43fa3db1e9e14f104a51371795c7157fb7bbd01091da0470b9320/hidepon1192/paperbit" /><meta name="twitter:site" content="@github" /><meta name="twitter:card" content="summary_large_image" /><meta name="twitter:title" content="Upload files · hidepon1192/paperbit" /><meta name="twitter:description" content="Contribute to hidepon1192/paperbit development by creating an account on GitHub." />
+  <meta property="og:image" content="https://opengraph.githubassets.com/3e05c7dcadf43fa3db1e9e14f104a51371795c7157fb7bbd01091da0470b9320/hidepon1192/paperbit" /><meta property="og:image:alt" content="Contribute to hidepon1192/paperbit development by creating an account on GitHub." /><meta property="og:image:width" content="1200" /><meta property="og:image:height" content="600" /><meta property="og:site_name" content="GitHub" /><meta property="og:type" content="object" /><meta property="og:title" content="Upload files · hidepon1192/paperbit" /><meta property="og:url" content="https://github.com/hidepon1192/paperbit" /><meta property="og:description" content="Contribute to hidepon1192/paperbit development by creating an account on GitHub." />
   
 
 
@@ -305,10 +305,10 @@
         <span class="js-stale-session-flash-signed-out" hidden>You signed out in another tab or window. <a class="Link--inTextBlock" href="">Reload</a> to refresh your session.</span>
         <span class="js-stale-session-flash-switched" hidden>You switched accounts on another tab or window. <a class="Link--inTextBlock" href="">Reload</a> to refresh your session.</span>
 
-    <button id="icon-button-73f7ad44-4e97-4acc-80fb-7ffefed276ac" aria-labelledby="tooltip-23a6858d-190b-4fca-80f2-4263e16e69a9" type="button" data-view-component="true" class="Button Button--iconOnly Button--invisible Button--medium flash-close js-flash-close">  <svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-x Button-visual">
+    <button id="icon-button-d8209a2c-5057-4176-b48c-cd47f3401ad1" aria-labelledby="tooltip-808b14fe-62ae-4be3-b0fe-48e98b15b6ed" type="button" data-view-component="true" class="Button Button--iconOnly Button--invisible Button--medium flash-close js-flash-close">  <svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-x Button-visual">
     <path d="M3.72 3.72a.75.75 0 0 1 1.06 0L8 6.94l3.22-3.22a.749.749 0 0 1 1.275.326.749.749 0 0 1-.215.734L9.06 8l3.22 3.22a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215L8 9.06l-3.22 3.22a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042L6.94 8 3.72 4.78a.75.75 0 0 1 0-1.06Z"></path>
 </svg>
-</button><tool-tip id="tooltip-23a6858d-190b-4fca-80f2-4263e16e69a9" for="icon-button-73f7ad44-4e97-4acc-80fb-7ffefed276ac" popover="manual" data-direction="s" data-type="label" data-view-component="true" class="sr-only position-absolute">Dismiss alert</tool-tip>
+</button><tool-tip id="tooltip-808b14fe-62ae-4be3-b0fe-48e98b15b6ed" for="icon-button-d8209a2c-5057-4176-b48c-cd47f3401ad1" popover="manual" data-direction="s" data-type="label" data-view-component="true" class="sr-only position-absolute">Dismiss alert</tool-tip>
 
 
   
@@ -414,7 +414,7 @@
             <a href="/login?return_to=%2Fhidepon1192%2Fpaperbit" rel="nofollow" id="repository-details-watch-button" data-hydro-click="{&quot;event_type&quot;:&quot;authentication.click&quot;,&quot;payload&quot;:{&quot;location_in_page&quot;:&quot;notification subscription menu watch&quot;,&quot;repository_id&quot;:null,&quot;auth_type&quot;:&quot;LOG_IN&quot;,&quot;originating_url&quot;:&quot;https://github.com/hidepon1192/paperbit/upload/main&quot;,&quot;user_id&quot;:null}}" data-hydro-click-hmac="607cd49721ddbf4c925702afb4d8d79363d714bf4d0701a76046ff5e354eef98" aria-label="You must be signed in to change notification settings" data-view-component="true" class="btn-sm btn">    <svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-bell mr-2 tmp-mr-2">
     <path d="M8 16a2 2 0 0 0 1.985-1.75c.017-.137-.097-.25-.235-.25h-3.5c-.138 0-.252.113-.235.25A2 2 0 0 0 8 16ZM3 5a5 5 0 0 1 10 0v2.947c0 .05.015.098.042.139l1.703 2.555A1.519 1.519 0 0 1 13.482 13H2.518a1.516 1.516 0 0 1-1.263-2.36l1.703-2.554A.255.255 0 0 0 3 7.947Zm5-3.5A3.5 3.5 0 0 0 4.5 5v2.947c0 .346-.102.683-.294.97l-1.703 2.556a.017.017 0 0 0-.003.01l.001.006c0 .002.002.004.004.006l.006.004.007.001h10.964l.007-.001.006-.004.004-.006.001-.007a.017.017 0 0 0-.003-.01l-1.703-2.554a1.745 1.745 0 0 1-.294-.97V5A3.5 3.5 0 0 0 8 1.5Z"></path>
 </svg>Notifications
-</a>    <tool-tip id="tooltip-a79c060e-4ba5-4aa9-b7d2-73dccbd47415" for="repository-details-watch-button" popover="manual" data-direction="s" data-type="description" data-view-component="true" class="sr-only position-absolute">You must be signed in to change notification settings</tool-tip>
+</a>    <tool-tip id="tooltip-f23d0d26-c78a-4c8d-862b-55b6d2cb8bb9" for="repository-details-watch-button" popover="manual" data-direction="s" data-type="description" data-view-component="true" class="sr-only position-absolute">You must be signed in to change notification settings</tool-tip>
 
   </li>
 
@@ -535,22 +535,22 @@
 </ul>
     <div style="visibility:hidden;" data-view-component="true" class="UnderlineNav-actions js-responsive-underlinenav-overflow position-absolute pr-3 tmp-pr-3 pr-md-4 tmp-pr-md-4 pr-lg-5 tmp-pr-lg-5 right-0">      <action-menu data-select-variant="none" data-view-component="true">
   <focus-group direction="vertical" mnemonics retain>
-    <button id="action-menu-30638492-2af6-4511-9a3d-8f32640e7660-button" popovertarget="action-menu-30638492-2af6-4511-9a3d-8f32640e7660-overlay" aria-controls="action-menu-30638492-2af6-4511-9a3d-8f32640e7660-list" aria-haspopup="true" aria-labelledby="tooltip-ea6a15a1-6723-42a2-8f64-26b76d07fa71" type="button" data-view-component="true" class="Button Button--iconOnly Button--secondary Button--medium UnderlineNav-item">  <svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-kebab-horizontal Button-visual">
+    <button id="action-menu-9041de05-0816-4663-8fc7-72cc49497f11-button" popovertarget="action-menu-9041de05-0816-4663-8fc7-72cc49497f11-overlay" aria-controls="action-menu-9041de05-0816-4663-8fc7-72cc49497f11-list" aria-haspopup="true" aria-labelledby="tooltip-48f7e46b-f7ac-46e6-94ee-7ed5082b89ee" type="button" data-view-component="true" class="Button Button--iconOnly Button--secondary Button--medium UnderlineNav-item">  <svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-kebab-horizontal Button-visual">
     <path d="M8 9a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3ZM1.5 9a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Zm13 0a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z"></path>
 </svg>
-</button><tool-tip id="tooltip-ea6a15a1-6723-42a2-8f64-26b76d07fa71" for="action-menu-30638492-2af6-4511-9a3d-8f32640e7660-button" popover="manual" data-direction="s" data-type="label" data-view-component="true" class="sr-only position-absolute">Additional navigation options</tool-tip>
+</button><tool-tip id="tooltip-48f7e46b-f7ac-46e6-94ee-7ed5082b89ee" for="action-menu-9041de05-0816-4663-8fc7-72cc49497f11-button" popover="manual" data-direction="s" data-type="label" data-view-component="true" class="sr-only position-absolute">Additional navigation options</tool-tip>
 
 
-<anchored-position data-target="action-menu.overlay" id="action-menu-30638492-2af6-4511-9a3d-8f32640e7660-overlay" anchor="action-menu-30638492-2af6-4511-9a3d-8f32640e7660-button" align="start" side="outside-bottom" anchor-offset="normal" popover="auto" data-view-component="true">
+<anchored-position data-target="action-menu.overlay" id="action-menu-9041de05-0816-4663-8fc7-72cc49497f11-overlay" anchor="action-menu-9041de05-0816-4663-8fc7-72cc49497f11-button" align="start" side="outside-bottom" anchor-offset="normal" popover="auto" data-view-component="true">
   <div data-view-component="true" class="Overlay Overlay--size-auto">
     
       <div data-view-component="true" class="Overlay-body Overlay-body--paddingNone">          <action-list>
   <div data-view-component="true">
-    <ul aria-labelledby="action-menu-30638492-2af6-4511-9a3d-8f32640e7660-button" id="action-menu-30638492-2af6-4511-9a3d-8f32640e7660-list" role="menu" data-view-component="true" class="ActionListWrap--inset ActionListWrap">
+    <ul aria-labelledby="action-menu-9041de05-0816-4663-8fc7-72cc49497f11-button" id="action-menu-9041de05-0816-4663-8fc7-72cc49497f11-list" role="menu" data-view-component="true" class="ActionListWrap--inset ActionListWrap">
         <li hidden="hidden" data-menu-item="i0code-tab" data-targets="action-list.items" role="none" data-view-component="true" class="ActionListItem">
     
     
-    <a tabindex="-1" id="item-670d18fb-1c1d-4d24-a104-f1395fcbfdb0" href="/hidepon1192/paperbit" role="menuitem" data-view-component="true" class="ActionListContent ActionListContent--visual16">
+    <a tabindex="-1" id="item-c65224fc-4083-4c6f-b94f-037fd3a00bd1" href="/hidepon1192/paperbit" role="menuitem" data-view-component="true" class="ActionListContent ActionListContent--visual16">
         <span class="ActionListItem-visual ActionListItem-visual--leading">
           <svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-code">
     <path d="m11.28 3.22 4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.749.749 0 0 1-1.275-.326.749.749 0 0 1 .215-.734L13.94 8l-3.72-3.72a.749.749 0 0 1 .326-1.275.749.749 0 0 1 .734.215Zm-6.56 0a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042L2.06 8l3.72 3.72a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215L.47 8.53a.75.75 0 0 1 0-1.06Z"></path>
@@ -566,7 +566,7 @@
         <li hidden="hidden" data-menu-item="i1issues-tab" data-targets="action-list.items" role="none" data-view-component="true" class="ActionListItem">
     
     
-    <a tabindex="-1" id="item-4dc86739-533d-46e6-bd4c-6577e9176ac5" href="/hidepon1192/paperbit/issues" role="menuitem" data-view-component="true" class="ActionListContent ActionListContent--visual16">
+    <a tabindex="-1" id="item-cc5a4ad1-0b58-43ba-a1df-b124bb385f92" href="/hidepon1192/paperbit/issues" role="menuitem" data-view-component="true" class="ActionListContent ActionListContent--visual16">
         <span class="ActionListItem-visual ActionListItem-visual--leading">
           <svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-issue-opened">
     <path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z"></path><path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0ZM1.5 8a6.5 6.5 0 1 0 13 0 6.5 6.5 0 0 0-13 0Z"></path>
@@ -582,7 +582,7 @@
         <li hidden="hidden" data-menu-item="i2pull-requests-tab" data-targets="action-list.items" role="none" data-view-component="true" class="ActionListItem">
     
     
-    <a tabindex="-1" id="item-20b886ca-f964-4ff7-afe2-da1c4fff6293" href="/hidepon1192/paperbit/pulls" role="menuitem" data-view-component="true" class="ActionListContent ActionListContent--visual16">
+    <a tabindex="-1" id="item-9db7f30e-de31-4b9d-b898-8ad55a4d0e6b" href="/hidepon1192/paperbit/pulls" role="menuitem" data-view-component="true" class="ActionListContent ActionListContent--visual16">
         <span class="ActionListItem-visual ActionListItem-visual--leading">
           <svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-git-pull-request">
     <path d="M1.5 3.25a2.25 2.25 0 1 1 3 2.122v5.256a2.251 2.251 0 1 1-1.5 0V5.372A2.25 2.25 0 0 1 1.5 3.25Zm5.677-.177L9.573.677A.25.25 0 0 1 10 .854V2.5h1A2.5 2.5 0 0 1 13.5 5v5.628a2.251 2.251 0 1 1-1.5 0V5a1 1 0 0 0-1-1h-1v1.646a.25.25 0 0 1-.427.177L7.177 3.427a.25.25 0 0 1 0-.354ZM3.75 2.5a.75.75 0 1 0 0 1.5.75.75 0 0 0 0-1.5Zm0 9.5a.75.75 0 1 0 0 1.5.75.75 0 0 0 0-1.5Zm8.25.75a.75.75 0 1 0 1.5 0 .75.75 0 0 0-1.5 0Z"></path>
@@ -598,7 +598,7 @@
         <li hidden="hidden" data-menu-item="i3actions-tab" data-targets="action-list.items" role="none" data-view-component="true" class="ActionListItem">
     
     
-    <a tabindex="-1" id="item-b293560b-731c-43fc-9355-ee02dad91c17" href="/hidepon1192/paperbit/actions" role="menuitem" data-view-component="true" class="ActionListContent ActionListContent--visual16">
+    <a tabindex="-1" id="item-d4068e64-086d-40c2-99a1-6b4500956cd1" href="/hidepon1192/paperbit/actions" role="menuitem" data-view-component="true" class="ActionListContent ActionListContent--visual16">
         <span class="ActionListItem-visual ActionListItem-visual--leading">
           <svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-play">
     <path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0ZM1.5 8a6.5 6.5 0 1 0 13 0 6.5 6.5 0 0 0-13 0Zm4.879-2.773 4.264 2.559a.25.25 0 0 1 0 .428l-4.264 2.559A.25.25 0 0 1 6 10.559V5.442a.25.25 0 0 1 .379-.215Z"></path>
@@ -614,7 +614,7 @@
         <li hidden="hidden" data-menu-item="i4projects-tab" data-targets="action-list.items" role="none" data-view-component="true" class="ActionListItem">
     
     
-    <a tabindex="-1" id="item-102d4a5c-1c62-4842-bf15-cc74e1f9e56f" href="/hidepon1192/paperbit/projects" role="menuitem" data-view-component="true" class="ActionListContent ActionListContent--visual16">
+    <a tabindex="-1" id="item-96fb8668-5a07-46d6-b18e-78ee472ca235" href="/hidepon1192/paperbit/projects" role="menuitem" data-view-component="true" class="ActionListContent ActionListContent--visual16">
         <span class="ActionListItem-visual ActionListItem-visual--leading">
           <svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-table">
     <path d="M0 1.75C0 .784.784 0 1.75 0h12.5C15.216 0 16 .784 16 1.75v12.5A1.75 1.75 0 0 1 14.25 16H1.75A1.75 1.75 0 0 1 0 14.25ZM6.5 6.5v8h7.75a.25.25 0 0 0 .25-.25V6.5Zm8-1.5V1.75a.25.25 0 0 0-.25-.25H6.5V5Zm-13 1.5v7.75c0 .138.112.25.25.25H5v-8ZM5 5V1.5H1.75a.25.25 0 0 0-.25.25V5Z"></path>
@@ -630,7 +630,7 @@
         <li hidden="hidden" data-menu-item="i5security-and-quality-tab" data-targets="action-list.items" role="none" data-view-component="true" class="ActionListItem">
     
     
-    <a tabindex="-1" id="item-df839c16-699d-4c5a-9511-c99a49523fc2" href="/hidepon1192/paperbit/security" role="menuitem" data-view-component="true" class="ActionListContent ActionListContent--visual16">
+    <a tabindex="-1" id="item-9993feec-5bbe-4f7a-9d76-7b0d6b1aa721" href="/hidepon1192/paperbit/security" role="menuitem" data-view-component="true" class="ActionListContent ActionListContent--visual16">
         <span class="ActionListItem-visual ActionListItem-visual--leading">
           <svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-shield">
     <path d="M7.467.133a1.748 1.748 0 0 1 1.066 0l5.25 1.68A1.75 1.75 0 0 1 15 3.48V7c0 1.566-.32 3.182-1.303 4.682-.983 1.498-2.585 2.813-5.032 3.855a1.697 1.697 0 0 1-1.33 0c-2.447-1.042-4.049-2.357-5.032-3.855C1.32 10.182 1 8.566 1 7V3.48a1.75 1.75 0 0 1 1.217-1.667Zm.61 1.429a.25.25 0 0 0-.153 0l-5.25 1.68a.25.25 0 0 0-.174.238V7c0 1.358.275 2.666 1.057 3.86.784 1.194 2.121 2.34 4.366 3.297a.196.196 0 0 0 .154 0c2.245-.956 3.582-2.104 4.366-3.298C13.225 9.666 13.5 8.36 13.5 7V3.48a.251.251 0 0 0-.174-.237l-5.25-1.68ZM8.75 4.75v3a.75.75 0 0 1-1.5 0v-3a.75.75 0 0 1 1.5 0ZM9 10.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path>
@@ -646,7 +646,7 @@
         <li hidden="hidden" data-menu-item="i6insights-tab" data-targets="action-list.items" role="none" data-view-component="true" class="ActionListItem">
     
     
-    <a tabindex="-1" id="item-28b4d8d9-0f46-43d8-a0e5-7ccfe050fc9e" href="/hidepon1192/paperbit/pulse" role="menuitem" data-view-component="true" class="ActionListContent ActionListContent--visual16">
+    <a tabindex="-1" id="item-8efb0edf-7ffc-4a6b-a69f-ad5643331f5c" href="/hidepon1192/paperbit/pulse" role="menuitem" data-view-component="true" class="ActionListContent ActionListContent--visual16">
         <span class="ActionListItem-visual ActionListItem-visual--leading">
           <svg aria-hidden="true" data-component="Octicon" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-graph">
     <path d="M1.5 1.75V13.5h13.75a.75.75 0 0 1 0 1.5H.75a.75.75 0 0 1-.75-.75V1.75a.75.75 0 0 1 1.5 0Zm14.28 2.53-5.25 5.25a.75.75 0 0 1-1.06 0L7 7.06 4.28 9.78a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042l3.25-3.25a.75.75 0 0 1 1.06 0L10 7.94l4.72-4.72a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042Z"></path>
