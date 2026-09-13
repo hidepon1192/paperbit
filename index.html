@@ -237,6 +237,16 @@ td.r,th.r{text-align:right}
 @media (prefers-reduced-motion:reduce){.st i{animation:none}}
 .tx-note{font-size:11px;color:var(--muted);padding:8px 12px;border-top:1px solid var(--line)}
 
+/* ---------- Wallet view ---------- */
+.wallet-wrap{max-width:1100px;margin:0 auto;padding:18px 16px 32px;display:flex;flex-direction:column;gap:14px}
+.wallet-head{display:flex;align-items:baseline;gap:10px}
+.wallet-head h2{margin:0;font-size:18px;font-weight:700}
+.wallet-head .actions{margin-left:auto;display:flex;gap:8px}
+.wallet .assets{padding:0}
+.wallet .panel{min-height:200px}
+.wallet .bt{overflow:auto}
+.wallet .tile{padding:14px 16px}
+
 @media (max-width:1240px){
   .grid{grid-template-columns:minmax(0,1fr) 248px 300px;grid-template-rows:520px 300px 300px}
   .markets{grid-row:3;grid-column:1/2}
@@ -266,6 +276,7 @@ td.r,th.r{text-align:right}
     <button data-mode="spot">現物</button>
     <button data-mode="futures" class="on">USDT-M 先物</button>
   </nav>
+  <nav class="modes" aria-label="画面"><button id="navWallet">入出金</button></nav>
   <div class="conn" id="conn"><i></i><span>Bitget に接続中…</span></div>
   <div class="hd-equity">総資産 <b class="num" id="hdEquity">10,000.00</b> USDT <span class="num" id="hdUpnl"></span></div>
 </header>
@@ -344,6 +355,13 @@ td.r,th.r{text-align:right}
     <div class="bt" id="btBody"></div>
   </section>
 </main>
+<section class="wallet" id="walletView" hidden>
+  <div class="wallet-wrap">
+    <div class="wallet-head"><h2>入出金</h2><span class="muted">USDT</span><span class="actions"><button class="primary" id="wOpenW">USDT を送金</button><button class="ghost" id="wOpenD">入金アドレス</button></span></div>
+    <div class="assets" id="wTiles"></div>
+    <div class="panel"><div class="ph">入出金履歴<span class="bt-count" id="wCount"></span></div><div class="bt" id="wBody"></div></div>
+  </div>
+</section>
 <div class="modal" id="txModal" hidden>
   <div class="modal-box" role="dialog" aria-labelledby="txTitle">
     <div class="modal-hd"><span id="txTitle">USDT の入出金</span><button id="txClose" aria-label="閉じる">✕</button></div>
@@ -776,7 +794,7 @@ const short = (s, a = 8, b = 6) => s.length > a + b + 3 ? `${s.slice(0, a)}…${
 function renderTransfers() {
   const tx = S.transfers || [];
   if (!tx.length) return '';
-  return `<table><thead><tr><th>入出金</th><th>ネットワーク</th><th>宛先</th><th class="r">数量</th><th class="r">手数料</th><th>TXID</th><th>ステータス</th><th class="r">操作</th></tr></thead><tbody>${tx.map(t => `<tr><td><span class="num muted">${dstr(t.t)}</span> <b>USDT 出金</b></td><td>${netById[t.net] ? netById[t.net].name : t.net}</td><td class="num txid" data-copy="${t.address}" title="${t.address}">${short(t.address)}</td><td class="r num">${fmt(t.amount)} USDT</td><td class="r num muted">${fmt(t.fee)}</td><td class="num txid" data-copy="${t.txid}" title="${t.txid}">${short(t.txid, 10, 6)}</td><td>${t.status === 'cancelled' ? '<span class="st cancel"><i></i>取消済み</span>' : '<span class="st"><i></i>処理中 <span class="num">0/20 確認</span></span>'}</td><td class="r">${t.status === 'pending' ? `<button class="sm" data-txcancel="${t.id}">取消</button>` : ''}</td></tr>`).join('')}</tbody></table>`;
+  return `<table><thead><tr><th>入出金</th><th>ネットワーク</th><th>宛先</th><th class="r">数量</th><th class="r">手数料</th><th>TXID</th><th>ステータス</th><th class="r">操作</th></tr></thead><tbody>${tx.map(t => `<tr><td><span class="num muted">${dstr(t.t)}</span> <b>USDT 出金</b></td><td>${netById[t.net] ? netById[t.net].name : t.net}</td><td class="num txid" data-copy="${t.address}" title="${t.address}">${short(t.address)}</td><td class="r num">${fmt(t.amount)} USDT</td><td class="r num muted">${fmt(t.fee)}</td><td class="num txid" data-copy="${t.txid}" title="${t.txid}">${short(t.txid, 10, 6)}</td><td>${t.status === 'cancelled' ? '<span class="st cancel"><i></i>取消済み</span>' : '<span class="st"><i></i>処理中 <span class="num">15/20 確認</span></span>'}</td><td class="r">${t.status === 'pending' ? `<button class="sm" data-txcancel="${t.id}">取消</button>` : ''}</td></tr>`).join('')}</tbody></table>`;
 }
 let txTab = 'withdraw', txArmed = null;
 function openTxModal(tab) {
@@ -814,18 +832,45 @@ function sendTx() {
   log({ sym: 'USDT', mode: 'transfer', side: 'sell', type: '出金', price: 1, qty: f.amt, fee: f.fee, pnl: 0 });
   save(); $('#txAddr').value = ''; $('#txAmt').value = ''; closeTxModal();
   toast(`${fmt(f.amt)} USDT の送金リクエストを受け付けました`, `${f.net.name}・TXID ${short(t.txid, 10, 6)}・処理中`, '');
+  if (view === 'wallet') { renderWallet(); renderHeader(); return; }
   btTab = 'ast'; $$('#btTabs button').forEach(x => x.classList.toggle('on', x.dataset.bt === 'ast')); render(true);
 }
 function cancelTx(id) {
   const t = (S.transfers || []).find(x => x.id === id); if (!t || t.status !== 'pending') return;
   t.status = 'cancelled'; S.usdt += t.amount + t.fee;
   log({ sym: 'USDT', mode: 'transfer', side: 'buy', type: '出金取消', price: 1, qty: t.amount, fee: -t.fee, pnl: 0 });
-  save(); toast('送金を取り消しました', `${fmt(t.amount + t.fee)} USDT を残高に戻しました`, 'warn'); render(true);
+  save(); toast('送金を取り消しました', `${fmt(t.amount + t.fee)} USDT を残高に戻しました`, 'warn'); render(true); if (view === 'wallet') renderWallet();
 }
 function copyText(s) { try { navigator.clipboard.writeText(s).then(() => toast('コピーしました', short(s, 14, 8), '')); } catch (e) { toast('コピーできませんでした', '手動で選択してコピーしてください', 'warn'); } }
 $('#btBody').addEventListener('click', e => {
   if (e.target.closest('#txOpenW')) return openTxModal('withdraw');
   if (e.target.closest('#txOpenD')) return openTxModal('deposit');
+  const c = e.target.closest('[data-txcancel]'); if (c) return cancelTx(c.dataset.txcancel);
+  const cp = e.target.closest('[data-copy]'); if (cp) copyText(cp.dataset.copy);
+});
+/* ---------- wallet view (入出金画面) ---------- */
+let view = 'trade';
+function setView(v) {
+  view = v; $('.grid').hidden = v !== 'trade'; $('#walletView').hidden = v !== 'wallet';
+  $('#navWallet').classList.toggle('on', v === 'wallet'); $$('.modes [data-mode]').forEach(x => x.classList.toggle('on', v === 'trade' && x.dataset.mode === S.mode));
+  if (v === 'wallet') renderWallet(); else { dirty = true; render(true); }
+}
+function renderWallet(tilesOnly) {
+  const tx = S.transfers || []; const pending = tx.filter(t => t.status === 'pending');
+  const out = tx.filter(t => t.status !== 'cancelled').reduce((a, t) => a + t.amount + t.fee, 0);
+  $('#wTiles').innerHTML = `
+    <div class="tile"><div class="eyebrow">総資産</div><div class="v num">${fmt(equity())} <small class="muted">USDT</small></div><div class="s">口座全体の評価額</div></div>
+    <div class="tile"><div class="eyebrow">利用可能 USDT</div><div class="v num">${fmt(S.usdt)}</div><div class="s">送金に使える残高</div></div>
+    <div class="tile"><div class="eyebrow">出金処理中</div><div class="v num ${pending.length ? 'down' : ''}">${fmt(pending.reduce((a, t) => a + t.amount, 0))}</div><div class="s">${pending.length} 件</div></div>
+    <div class="tile"><div class="eyebrow">出金累計（手数料込み）</div><div class="v num">${fmt(out)}</div><div class="s">${tx.length} 件の入出金</div></div>`;
+  if (tilesOnly) return;
+  $('#wCount').textContent = tx.length ? `${tx.length} 件` : '';
+  $('#wBody').innerHTML = tx.length ? renderTransfers() : `<div class="empty"><b>入出金はまだありません</b>右上の「USDT を送金」から送金できます。</div>`;
+}
+$('#navWallet').addEventListener('click', () => setView(view === 'wallet' ? 'trade' : 'wallet'));
+$('#wOpenW').addEventListener('click', () => openTxModal('withdraw'));
+$('#wOpenD').addEventListener('click', () => openTxModal('deposit'));
+$('#wBody').addEventListener('click', e => {
   const c = e.target.closest('[data-txcancel]'); if (c) return cancelTx(c.dataset.txcancel);
   const cp = e.target.closest('[data-copy]'); if (cp) copyText(cp.dataset.copy);
 });
@@ -963,7 +1008,7 @@ function toast(title, sub, kind) {
 }
 
 /* ---------- events ---------- */
-$$('.modes button').forEach(b => b.addEventListener('click', () => { S.mode = b.dataset.mode; $$('.modes button').forEach(x => x.classList.toggle('on', x === b)); $('#price').value = ''; switchInstrument(); }));
+$$('.modes [data-mode]').forEach(b => b.addEventListener('click', () => { S.mode = b.dataset.mode; if (view !== 'trade') setView('trade'); $$('.modes [data-mode]').forEach(x => x.classList.toggle('on', x === b)); $('#price').value = ''; switchInstrument(); }));
 $('#mkList').addEventListener('click', e => { const r = e.target.closest('.mk-row'); if (!r) return; S.sym = r.dataset.sym; $('#price').value = ''; $('#qty').value = ''; switchInstrument(); });
 $('#mkSearch').addEventListener('input', renderMarkets);
 $('#tfbar').addEventListener('click', e => { const b = e.target.closest('[data-tf]'); if (!b) return; tf = b.dataset.tf; $$('#tfbar [data-tf]').forEach(x => x.classList.toggle('on', x === b)); live.candles = []; live.candleKey = ''; loadCandles(); resubscribe(); });
@@ -990,7 +1035,7 @@ new ResizeObserver(() => { dirty = true; }).observe(cv.parentElement);
 window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => { dirty = true; });
 
 /* ---------- boot ---------- */
-$$('.modes button').forEach(x => x.classList.toggle('on', x.dataset.mode === S.mode));
+$$('.modes [data-mode]').forEach(x => x.classList.toggle('on', x.dataset.mode === S.mode));
 render(true);
 (async () => {
   try { await bootstrap(); } catch (e) { setConn('bad', 'Bitget API に接続できません'); toast('Bitget API に接続できませんでした', e.message, 'down'); }
@@ -998,7 +1043,7 @@ render(true);
   render(true); loadCandles(); connect();
 })();
 setInterval(() => { if (dirty) render(false); }, 250);       // 描画は最大 4fps に間引き
-setInterval(() => { if (btTab !== 'his') renderBottom(); renderHeader(); }, 1000);
+setInterval(() => { if (btTab !== 'his') renderBottom(); renderHeader(); if (view === 'wallet') renderWallet(true); }, 1000);
 })();
 </script>
 </body>
